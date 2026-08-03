@@ -1,38 +1,85 @@
 :host {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+
+    padding: 30px 0 60px;
+}
+
+.back-link {
+    align-self: flex-start;
+
+    margin-bottom: 24px;
+
+    color: #7b4b35;
+    text-decoration: none;
+
+    font-weight: 600;
+    font-size: 15px;
+
+    transition: .2s;
+}
+
+.back-link:hover {
+    color: #553225;
+    transform: translateX(-4px);
 }
 
 .recipe-card {
 
-    width: 700px;
-
-    background: #fcfbf8;
-
-    border-radius: 10px;
+    width: min(900px, 90vw);
 
     padding: 42px;
 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    border-radius: 18px;
 
-    display: flex;
-    flex-direction: column;
+    background: #fffdf8;
 
-    gap: 28px;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, .08);
+}
+
+.recipe-card {
+
+    animation: fadeIn .35s ease;
+}
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+        transform: translateY(25px);
+
+    }
+
+    to {
+
+        opacity: 1;
+        transform: none;
+
+    }
+
 }
 
 .recipe-title {
 
-    margin: 0;
+    text-align: center;
+
+    font-size: 3rem;
+
+    font-family: Georgia, serif;
+
+    margin-bottom: 12px;
+}
+
+.recipe-price {
 
     text-align: center;
 
-    font-family: "Cormorant Garamond", serif;
-
-    font-size: 48px;
-
-    font-weight: 700;
-
-    color: #222;
+    margin-bottom: 24px;
 }
 
 .recipe-image {
@@ -43,31 +90,35 @@
 
     object-fit: cover;
 
-    border-radius: 8px;
+    border-radius: 16px;
+
+    margin: 28px 0;
+
 }
 
 .recipe-description {
 
-    margin: 0;
+    max-width: 650px;
+
+    margin: 0 auto 30px;
 
     text-align: center;
 
-    color: #666;
-
     line-height: 1.8;
 
-    font-size: 18px;
+    color: #5d5148;
+
 }
 
 .servings-control {
+
+    margin: 36px auto;
 
     display: flex;
 
     justify-content: center;
 
-    align-items: center;
-
-    gap: 24px;
+    gap: 22px;
 }
 
 .servings-control button {
@@ -115,11 +166,16 @@
 
 h3 {
 
-    margin: 0;
+    margin-top: 42px;
 
-    font-family: "Cormorant Garamond", serif;
+    margin-bottom: 18px;
 
-    font-size: 34px;
+    font-size: 2rem;
+
+    border-bottom: 1px solid #e7dfd4;
+
+    padding-bottom: 10px;
+
 }
 
 .ingredient-list {
@@ -199,15 +255,14 @@ h3 {
 
 .recipe-summary {
 
-    margin-top: 30px;
+    margin-top: 40px;
 
-    border-top: 2px solid #d9cfbc;
+    padding: 24px;
 
-    padding-top: 20px;
+    border-radius: 14px;
 
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    background: #f8f4eb;
+
 }
 
 .summary-row {
@@ -247,4 +302,30 @@ h3 {
     color: #7f2718;
 
     font-size: 22px;
+}
+
+
+.search-group {
+    width: min(850px, 100%);
+    margin: 20px auto 35px;
+}
+
+.search-group label {
+    display: block;
+    margin-bottom: 8px;
+
+    font-weight: 600;
+}
+
+.search-group input {
+    width: 100%;
+
+    padding: 14px 18px;
+
+    border: 1px solid #d8c7b5;
+    border-radius: 10px;
+
+    background: #fff;
+
+    font-size: 16px;
 }

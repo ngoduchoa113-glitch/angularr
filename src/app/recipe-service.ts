@@ -11,4 +11,10 @@ export class RecipeService {
 
   readonly recipes = this.recipesState.asReadonly();
 
+  getRecipeById(id: number): RecipeModel | undefined {
+    return this.recipesState().find((recipe) => recipe.id === id);
+  }
+
+
+
 }

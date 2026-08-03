@@ -1,16 +1,31 @@
+<a class="back-link" routerLink="/recipes">
+    ← Quay lại danh sách
+</a>
+
+<div class="search-group">
+
+    <label for="search">
+        Tìm kiếm món ăn
+    </label>
+
+    <input id="search" type="text" placeholder="Ví dụ: Pizza...">
+
+</div>
+
+@if (selectedRecipe(); as recipe) {
+
 <div class="recipe-card">
 
     <!-- Header -->
     <h2 class="recipe-title">
-        {{ recipe().name }}
+        {{ recipe.name }}
     </h2>
 
-    <img class="recipe-image" [src]="recipe().imgUrl" [alt]="recipe().name">
+    <img class="recipe-image" [src]="recipe.imgUrl" [alt]="recipe.name">
 
     <p class="recipe-description">
-        {{ recipe().description }}
+        {{ recipe.description }}
     </p>
-
 
     <!-- Price -->
     <div class="recipe-price">
@@ -18,19 +33,16 @@
         <p>
             Price:
             <span>
-                {{ recipe().price | number }} VND
+                {{ recipe.price | number }} VND
             </span>
         </p>
-
-
-
     </div>
 
-    @if (recipe().price < 100000) { <p class="price-tag budget">
+    @if (recipe.price < 100000) { <p class="price-tag budget">
         Bình dân
         </p>
 
-        } @else if (recipe().price <= 150000) { <p class="price-tag standard">
+        } @else if (recipe.price <= 150000) { <p class="price-tag standard">
             Tiêu chuẩn
             </p>
 
@@ -41,7 +53,6 @@
             </p>
 
             }
-
 
             <!-- Servings -->
             <div class="servings-control">
@@ -64,11 +75,8 @@
 
             </div>
 
-
             <!-- Ingredients -->
-            <h3>
-                Ingredients
-            </h3>
+            <h3>Ingredients</h3>
 
             <ul class="ingredient-list">
 
@@ -102,13 +110,12 @@
 
             </ul>
 
-
             <!-- Summary -->
             <div class="recipe-summary">
 
                 <div class="summary-row">
 
-                    <span>Total ingredients: </span>
+                    <span>Total ingredients:</span>
 
                     <strong>
                         {{ tongSoNguyenLieu() | number }}
@@ -118,7 +125,7 @@
 
                 <div class="summary-row">
 
-                    <span>Total: </span>
+                    <span>Total:</span>
 
                     <strong>
                         {{ tongTien() | number }} VNĐ
@@ -130,7 +137,7 @@
 
                 <div class="summary-row discount">
 
-                    <span>Discounted price: </span>
+                    <span>Discounted price:</span>
 
                     <strong>
                         {{ tongTienSauGiam() | number }} VNĐ
@@ -143,3 +150,19 @@
             </div>
 
 </div>
+
+} @else {
+
+<div class="recipe-card">
+
+    <h2>
+        Không tìm thấy công thức.
+    </h2>
+
+    <p>
+        Công thức bạn đang tìm không tồn tại hoặc đã bị xóa.
+    </p>
+
+</div>
+
+}

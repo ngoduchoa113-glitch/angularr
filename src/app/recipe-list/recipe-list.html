@@ -1,57 +1,33 @@
-<div class="recipe-layout">
+<ul class="picker-buttons">
 
-    <label for="search-recipe">
-        <div class="search-group">
+    @for (recipe of filteredRecipes(); track recipe.id) {
 
-            <label for="search-recipe">
-                Tìm kiếm món ăn:
-            </label>
+    <li>
 
-            <input id="search-recipe" type="text" placeholder="Ví dụ: Pizza..." [ngModel]="searchText()"
-                (ngModelChange)="searchText.set($event)">
+        <a class="recipe-button" [routerLink]="['/recipes', recipe.id]">
 
-        </div>
-    </label>
+            {{ recipe.name }}
 
+            @if (recipe.isFavorite) {
+            <span class="favorite-star" aria-label="Món yêu thích">
+                ★
+            </span>
+            }
 
+            @if (recipe.id === recipeDatNhat().id) {
+            💎
+            }
 
-    <ul class="picker-buttons">
+        </a>
 
-        @for (recipe of filteredRecipes(); track recipe.id) {
+    </li>
 
-        <li>
+    } @empty {
 
-            <button class="recipe-button" type="button" (click)="chonMon(recipe)"
-                [class.is-active]="selectedRecipe().id === recipe.id">
+    <li class="empty-message">
+        Không tìm thấy món nào.
+    </li>
 
-                {{ recipe.name }}
+    }
 
-                @if (recipe.isFavorite) {
-                <span class="favorite-star" aria-label="Món yêu thích">
-                    ★
-                </span>
-                }
-
-                @if (recipe.id === recipeDatNhat().id) {
-                💎
-                }
-
-            </button>
-
-        </li>
-
-        }
-        @empty {
-        <li class="empty-message">
-            Không tìm thấy món nào.
-        </li>
-        }
-
-
-
-    </ul>
-
-    <app-recipe-detail [recipe]="selectedRecipe()">
-    </app-recipe-detail>
-
-</div>
+</ul>
