@@ -1,0 +1,244 @@
+:host {
+    display: block;
+}
+
+.recipe-card {
+
+    width: 700px;
+
+    background: #fcfbf8;
+
+    border-radius: 10px;
+
+    padding: 42px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 28px;
+}
+
+.recipe-title {
+
+    margin: 0;
+
+    text-align: center;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 48px;
+
+    font-weight: 700;
+
+    color: #222;
+}
+
+.recipe-image {
+
+    width: 100%;
+
+    height: 420px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+}
+
+.recipe-description {
+
+    margin: 0;
+
+    text-align: center;
+
+    color: #666;
+
+    line-height: 1.8;
+
+    font-size: 18px;
+}
+
+.servings-control {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 24px;
+}
+
+.servings-control button {
+
+    width: 46px;
+    height: 46px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #8b4638;
+
+    color: white;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+.servings-control button:hover:not(:disabled) {
+
+    background: #6f352b;
+}
+
+.servings-control button:disabled {
+
+    background: #cfc3b3;
+
+    cursor: not-allowed;
+}
+
+.servings-number {
+
+    width: 40px;
+
+    text-align: center;
+
+    font-size: 28px;
+
+    font-weight: bold;
+}
+
+h3 {
+
+    margin: 0;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 34px;
+}
+
+.ingredient-list {
+
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+}
+
+.ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px 16px;
+
+    border-bottom: 1px solid #ececec;
+}
+
+.row-alt {
+    background-color: #f9eaea;
+}
+
+.ingredient-item:last-child {
+
+    border: none;
+}
+
+.ingredient-item span:last-child {
+
+    font-weight: bold;
+}
+
+
+.price-tag {
+
+    display: inline-block;
+
+    padding: 6px 14px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.budget {
+
+    background: #d1fae5;
+
+    color: #065f46;
+}
+
+.standard {
+
+    background: #fef3c7;
+
+    color: #92400e;
+}
+
+.premium {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+
+.recipe-summary {
+
+    margin-top: 30px;
+
+    border-top: 2px solid #d9cfbc;
+
+    padding-top: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary-row {
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: 17px;
+
+    color: #5d4635;
+}
+
+.summary-row strong {
+
+    font-size: 18px;
+
+    color: #231f1b;
+}
+
+.discount {
+
+    margin-top: 10px;
+
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    background: #f7efdb;
+
+    color: #8d5a17;
+}
+
+.discount strong {
+
+    color: #7f2718;
+
+    font-size: 22px;
+}

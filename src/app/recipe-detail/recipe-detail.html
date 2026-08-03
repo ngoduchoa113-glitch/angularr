@@ -1,0 +1,145 @@
+<div class="recipe-card">
+
+    <!-- Header -->
+    <h2 class="recipe-title">
+        {{ recipe().name }}
+    </h2>
+
+    <img class="recipe-image" [src]="recipe().imgUrl" [alt]="recipe().name">
+
+    <p class="recipe-description">
+        {{ recipe().description }}
+    </p>
+
+
+    <!-- Price -->
+    <div class="recipe-price">
+
+        <p>
+            Price:
+            <span>
+                {{ recipe().price | number }} VND
+            </span>
+        </p>
+
+
+
+    </div>
+
+    @if (recipe().price < 100000) { <p class="price-tag budget">
+        Bình dân
+        </p>
+
+        } @else if (recipe().price <= 150000) { <p class="price-tag standard">
+            Tiêu chuẩn
+            </p>
+
+            } @else {
+
+            <p class="price-tag premium">
+                Cao cấp
+            </p>
+
+            }
+
+
+            <!-- Servings -->
+            <div class="servings-control">
+
+                <button (click)="decreaseServings()" [disabled]="soPhanAn() === 1" aria-label="Decrease servings">
+
+                    −
+
+                </button>
+
+                <span class="servings-number">
+                    {{ soPhanAn() }}
+                </span>
+
+                <button (click)="increaseServings()" aria-label="Increase servings">
+
+                    +
+
+                </button>
+
+            </div>
+
+
+            <!-- Ingredients -->
+            <h3>
+                Ingredients
+            </h3>
+
+            <ul class="ingredient-list">
+
+                @for (
+                ingredient of adjustedIngredients();
+                track ingredient.name;
+                let i = $index;
+                let even = $even
+                ) {
+
+                <li class="ingredient-item" [class.row-alt]="even">
+
+                    <span>
+                        {{ i + 1 }}. {{ ingredient.name }}
+                    </span>
+
+                    <span>
+                        {{ ingredient.quantity | number }}
+                        {{ ingredient.unit }}
+                    </span>
+
+                </li>
+
+                } @empty {
+
+                <li class="ingredient-empty">
+                    Không có nguyên liệu.
+                </li>
+
+                }
+
+            </ul>
+
+
+            <!-- Summary -->
+            <div class="recipe-summary">
+
+                <div class="summary-row">
+
+                    <span>Total ingredients: </span>
+
+                    <strong>
+                        {{ tongSoNguyenLieu() | number }}
+                    </strong>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>Total: </span>
+
+                    <strong>
+                        {{ tongTien() | number }} VNĐ
+                    </strong>
+
+                </div>
+
+                @if (soPhanAn() >= 5) {
+
+                <div class="summary-row discount">
+
+                    <span>Discounted price: </span>
+
+                    <strong>
+                        {{ tongTienSauGiam() | number }} VNĐ
+                    </strong>
+
+                </div>
+
+                }
+
+            </div>
+
+</div>
