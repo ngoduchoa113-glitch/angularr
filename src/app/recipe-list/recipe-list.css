@@ -3,6 +3,43 @@
     width: 100%;
 }
 
+
+.search-group {
+    width: min(700px, 100%);
+    margin: 0 auto 30px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.search-group label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #5b4636;
+}
+
+.search-group input {
+    width: 100%;
+
+    padding: 14px 18px;
+
+    border: 2px solid #d8c7b5;
+    border-radius: 12px;
+
+    font-size: 16px;
+
+    background: #fffaf5;
+
+    transition: .2s;
+}
+
+.search-group input:focus {
+    outline: none;
+    border-color: #8b5e3c;
+    box-shadow: 0 0 0 4px rgba(139, 94, 60, .15);
+}
+
 .recipe-layout {
     display: flex;
     flex-direction: column;
