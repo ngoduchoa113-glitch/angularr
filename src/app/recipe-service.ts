@@ -15,6 +15,8 @@ export class RecipeService {
     return this.recipesState().find((recipe) => recipe.id === id);
   }
 
-
+  addRecipe(newRecipe: RecipeModel): void {
+    this.recipesState.update((current) => [...current, newRecipe]);
+  }
 
 }

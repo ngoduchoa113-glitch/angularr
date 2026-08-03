@@ -303,29 +303,3 @@ h3 {
 
     font-size: 22px;
 }
-
-
-.search-group {
-    width: min(850px, 100%);
-    margin: 20px auto 35px;
-}
-
-.search-group label {
-    display: block;
-    margin-bottom: 8px;
-
-    font-weight: 600;
-}
-
-.search-group input {
-    width: 100%;
-
-    padding: 14px 18px;
-
-    border: 1px solid #d8c7b5;
-    border-radius: 10px;
-
-    background: #fff;
-
-    font-size: 16px;
-}

@@ -1,0 +1,28 @@
+<a class="back-link" routerLink="/recipes">
+    ← Quay lại danh sách
+</a>
+
+<h2>📝 Thêm công thức mới</h2>
+
+<form class="recipe-form" [formGroup]="recipeForm" (ngSubmit)="save()">
+
+    <div class="field">
+        <label class="field-label" for="recipe-name">Tên món</label>
+        <input class="field-input" id="recipe-name" type="text" placeholder="Ví dụ: Phở bò" formControlName="name" />
+        @if (recipeForm.controls.name.invalid && recipeForm.controls.name.touched) {
+        <span class="field-error">Vui lòng nhập tên món.</span>
+        }
+    </div>
+
+    <div class="field">
+        <label class="field-label" for="recipe-desc">Mô tả</label>
+        <input class="field-input" id="recipe-desc" type="text" placeholder="Mô tả ngắn về món ăn..."
+            formControlName="description" />
+        @if (recipeForm.controls.description.invalid && recipeForm.controls.description.touched) {
+        <span class="field-error">Vui lòng nhập mô tả.</span>
+        }
+    </div>
+
+    <button class="submit-button" type="submit">Lưu công thức</button>
+
+</form>
