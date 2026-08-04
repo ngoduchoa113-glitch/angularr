@@ -11,9 +11,15 @@ import { RouterLink } from '@angular/router';
 })
 export class RecipeList {
 
-  private readonly recipeService = inject(RecipeService);
+  protected readonly resultCount = computed(() => {
+    return this.filteredRecipes().length;
+  });
 
-  protected readonly searchText = signal('');
+  protected readonly isSearching = computed(() =>
+    this.searchText().trim() !== ''
+  );
+
+  protected readonly sortType = signal<'asc' | 'desc'>('asc');
 
   protected readonly filteredRecipes = computed(() => {
 
@@ -31,6 +37,23 @@ export class RecipeList {
 
   });
 
+  protected readonly sortedRecipes = computed(() => {
+    const list = [...this.filteredRecipes()];
+
+    return list.sort((a, b) =>
+      this.sortType() === 'asc'
+        ? a.price - b.price
+        : b.price - a.price
+    );
+  });
+
+  setSort(type: 'asc' | 'desc') {
+    this.sortType.set(type);
+  }
+
+  public readonly recipeService = inject(RecipeService);
+
+  protected readonly searchText = signal('');
 
   protected readonly recipeDatNhat = computed(() => {
 

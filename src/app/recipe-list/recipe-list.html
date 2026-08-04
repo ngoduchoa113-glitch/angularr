@@ -1,39 +1,55 @@
-<a class="add-link" routerLink="/recipes/new">+ Thêm công thức mới</a>
-
 <div class="recipe-layout">
 
-    <!-- Thanh tìm kiếm -->
-    <div class="search-group">
+    <a class="add-button" routerLink="/recipes/new">
+        ➕ Thêm công thức
+    </a>
 
+    <div class="search-group">
         <label for="search-recipe">
             Tìm kiếm món ăn
         </label>
 
         <input id="search-recipe" type="text" placeholder="Ví dụ: Pizza..." [ngModel]="searchText()"
             (ngModelChange)="searchText.set($event)">
-
     </div>
 
-    <!-- Danh sách nút -->
+    <div class="sort-buttons">
+        <button (click)="setSort('asc')">
+            ↑ Giá tăng dần
+        </button>
+
+        <button (click)="setSort('desc')">
+            ↓ Giá giảm dần
+        </button>
+    </div>
+
+    @if (isSearching()) {
+    <p class="result-count">
+        Tìm thấy {{ resultCount() }} món
+    </p>
+    }
+
     <ul class="picker-buttons">
 
-        @for (recipe of filteredRecipes(); track recipe.id) {
+        @for (recipe of sortedRecipes(); track recipe.id) {
 
-        <li>
+        <li class="recipe-item">
 
             <a class="recipe-button" [routerLink]="['/recipes', recipe.id]">
 
                 {{ recipe.name }}
 
-                @if (recipe.isFavorite) {
-                <span class="favorite-star">★</span>
-                }
-
                 @if (recipe.id === recipeDatNhat().id) {
-                <span>💎</span>
+                <span class="diamond">💎</span>
                 }
 
             </a>
+
+            <span class="favorite-star" (click)="recipeService.toggleFavorite(recipe.id); $event.stopPropagation()">
+
+                {{ recipe.isFavorite ? '⭐' : '☆' }}
+
+            </span>
 
         </li>
 

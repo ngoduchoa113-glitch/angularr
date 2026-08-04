@@ -18,7 +18,10 @@ export class AddRecipe {
 
   protected readonly recipeForm = this.fb.group({
     name: ['', Validators.required],
+    price: [null, [Validators.required, Validators.min(1)]],
     description: ['', Validators.required],
+    ingredients: ['', Validators.required],
+    imgUrl: [''],
   });
 
   protected save(): void {
@@ -33,11 +36,19 @@ export class AddRecipe {
     const newRecipe: RecipeModel = {
       id: nextId,
       name: this.recipeForm.value.name!,
-      price: 100,
+      price: this.recipeForm.value.price!,
       description: this.recipeForm.value.description!,
-      imgUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600',
+      imgUrl:
+        this.recipeForm.value.imgUrl ||
+        'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600',
       isFavorite: false,
-      ingredients: [],
+      ingredients: [
+        {
+          name: this.recipeForm.value.ingredients!,
+          quantity: 1,
+          unit: 'cái',
+        },
+      ],
     };
 
     this.recipeService.addRecipe(newRecipe);

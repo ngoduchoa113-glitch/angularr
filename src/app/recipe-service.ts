@@ -9,6 +9,19 @@ export class RecipeService {
 
   private readonly recipesState = signal<RecipeModel[]>(MOCK_RECIPES);
 
+  toggleFavorite(id: number): void {
+    this.recipesState.update(recipes =>
+      recipes.map(recipe =>
+        recipe.id === id
+          ? {
+            ...recipe,
+            isFavorite: !recipe.isFavorite
+          }
+          : recipe
+      )
+    );
+  }
+
   readonly recipes = this.recipesState.asReadonly();
 
   getRecipeById(id: number): RecipeModel | undefined {

@@ -1,0 +1,152 @@
+:host {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+
+}
+
+.form-card {
+
+    width: 700px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 18px;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+
+}
+
+.back-link {
+
+    display: inline-block;
+
+    margin-bottom: 20px;
+
+    text-decoration: none;
+
+    color: #795548;
+
+    font-weight: 600;
+
+}
+
+.back-link:hover {
+    color: #553225;
+    transform: translateX(-4px);
+}
+
+h2 {
+
+    margin-bottom: 30px;
+
+    font-size: 34px;
+
+    text-align: center;
+
+    font-family: "Cormorant Garamond", serif;
+
+}
+
+.recipe-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 24px;
+
+}
+
+.field {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+}
+
+.field label {
+
+    font-weight: 700;
+
+    color: #5d4037;
+
+}
+
+.field input,
+.field textarea {
+
+    padding: 14px 16px;
+
+    border: 2px solid #ddd;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    transition: .2s;
+
+    outline: none;
+
+}
+
+.field textarea {
+
+    resize: vertical;
+
+}
+
+.field input:focus,
+.field textarea:focus {
+
+    border-color: #b08968;
+
+    box-shadow: 0 0 0 4px rgba(176, 137, 104, .18);
+
+}
+
+.submit-button {
+
+    margin-top: 10px;
+
+    padding: 16px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #7f5539;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .25s;
+
+}
+
+.submit-button:hover {
+
+    background: #9c6644;
+
+    transform: translateY(-2px);
+
+}
+
+.field-error {
+
+    color: #d32f2f;
+
+    font-size: 14px;
+
+}

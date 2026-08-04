@@ -2,27 +2,58 @@
     ← Quay lại danh sách
 </a>
 
-<h2>📝 Thêm công thức mới</h2>
+<div class="form-card">
 
-<form class="recipe-form" [formGroup]="recipeForm" (ngSubmit)="save()">
+    <h2>📝 Thêm công thức mới</h2>
 
-    <div class="field">
-        <label class="field-label" for="recipe-name">Tên món</label>
-        <input class="field-input" id="recipe-name" type="text" placeholder="Ví dụ: Phở bò" formControlName="name" />
-        @if (recipeForm.controls.name.invalid && recipeForm.controls.name.touched) {
-        <span class="field-error">Vui lòng nhập tên món.</span>
-        }
-    </div>
+    <form [formGroup]="recipeForm" (ngSubmit)="save()" class="recipe-form">
 
-    <div class="field">
-        <label class="field-label" for="recipe-desc">Mô tả</label>
-        <input class="field-input" id="recipe-desc" type="text" placeholder="Mô tả ngắn về món ăn..."
-            formControlName="description" />
-        @if (recipeForm.controls.description.invalid && recipeForm.controls.description.touched) {
-        <span class="field-error">Vui lòng nhập mô tả.</span>
-        }
-    </div>
+        <div class="field">
 
-    <button class="submit-button" type="submit">Lưu công thức</button>
+            <label>Tên món</label>
 
-</form>
+            <input type="text" formControlName="name" placeholder="Ví dụ: Phở bò">
+
+        </div>
+
+        <div class="field">
+
+            <label>Giá</label>
+
+            <input type="number" formControlName="price" placeholder="100">
+
+        </div>
+
+        <div class="field">
+
+            <label>Mô tả</label>
+
+            <textarea rows="4" formControlName="description" placeholder="Mô tả món ăn...">
+            </textarea>
+
+        </div>
+
+        <div class="field">
+
+            <label>Nguyên liệu</label>
+
+            <textarea rows="3" formControlName="ingredients" placeholder="Bò, Hành, Tiêu">
+            </textarea>
+
+        </div>
+
+        <div class="field">
+
+            <label>Hình ảnh (không bắt buộc)</label>
+
+            <input type="text" formControlName="imgUrl" placeholder="https://...">
+
+        </div>
+
+        <button class="submit-button">
+            ➕ Lưu công thức
+        </button>
+
+    </form>
+
+</div>
