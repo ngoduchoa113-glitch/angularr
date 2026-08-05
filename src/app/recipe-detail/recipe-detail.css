@@ -8,40 +8,10 @@
     padding: 30px 0 60px;
 }
 
-.back-link {
-    align-self: flex-start;
-
-    margin-bottom: 24px;
-
-    color: #7b4b35;
-    text-decoration: none;
-
-    font-weight: 600;
-    font-size: 15px;
-
-    transition: .2s;
-}
-
-.back-link:hover {
-    color: #553225;
-    transform: translateX(-4px);
-}
+/* ===== Card ===== */
 
 .recipe-card {
-
     width: min(900px, 90vw);
-
-    padding: 42px;
-
-    border-radius: 18px;
-
-    background: #fffdf8;
-
-    box-shadow:
-        0 10px 30px rgba(0, 0, 0, .08);
-}
-
-.recipe-card {
 
     animation: fadeIn .35s ease;
 }
@@ -49,171 +19,61 @@
 @keyframes fadeIn {
 
     from {
-
         opacity: 0;
         transform: translateY(25px);
-
     }
 
     to {
-
         opacity: 1;
         transform: none;
-
     }
 
 }
 
-.recipe-title {
-
-    text-align: center;
-
-    font-size: 3rem;
-
-    font-family: Georgia, serif;
-
-    margin-bottom: 12px;
-}
+/* ===== Giá ===== */
 
 .recipe-price {
-
     text-align: center;
-
-    margin-bottom: 24px;
+    margin: 20px 0;
 }
 
-.recipe-image {
+/* ===== Mô tả ===== */
 
-    width: 100%;
-
-    height: 420px;
-
-    object-fit: cover;
-
-    border-radius: 16px;
-
-    margin: 28px 0;
-
+mat-card-subtitle {
+    margin-top: 8px;
+    line-height: 1.6;
 }
 
-.recipe-description {
-
-    max-width: 650px;
-
-    margin: 0 auto 30px;
-
-    text-align: center;
-
-    line-height: 1.8;
-
-    color: #5d5148;
-
-}
+/* ===== Số phần ===== */
 
 .servings-control {
-
-    margin: 36px auto;
+    margin: 32px auto;
 
     display: flex;
-
     justify-content: center;
+    align-items: center;
 
-    gap: 22px;
-}
-
-.servings-control button {
-
-    width: 46px;
-    height: 46px;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: #8b4638;
-
-    color: white;
-
-    font-size: 22px;
-
-    cursor: pointer;
-
-    transition: .25s;
-}
-
-.servings-control button:hover:not(:disabled) {
-
-    background: #6f352b;
-}
-
-.servings-control button:disabled {
-
-    background: #cfc3b3;
-
-    cursor: not-allowed;
+    gap: 18px;
 }
 
 .servings-number {
-
-    width: 40px;
+    min-width: 40px;
 
     text-align: center;
 
-    font-size: 28px;
-
+    font-size: 26px;
     font-weight: bold;
 }
+
+/* ===== Tiêu đề nguyên liệu ===== */
 
 h3 {
-
-    margin-top: 42px;
-
-    margin-bottom: 18px;
-
-    font-size: 2rem;
-
-    border-bottom: 1px solid #e7dfd4;
-
-    padding-bottom: 10px;
-
+    margin: 36px 0 12px;
 }
 
-.ingredient-list {
-
-    list-style: none;
-
-    padding: 0;
-
-    margin: 0;
-}
-
-.ingredient-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 12px 16px;
-
-    border-bottom: 1px solid #ececec;
-}
-
-.row-alt {
-    background-color: #f9eaea;
-}
-
-.ingredient-item:last-child {
-
-    border: none;
-}
-
-.ingredient-item span:last-child {
-
-    font-weight: bold;
-}
-
+/* ===== Mức giá ===== */
 
 .price-tag {
-
     display: inline-block;
 
     padding: 6px 14px;
@@ -226,40 +86,29 @@ h3 {
 }
 
 .budget {
-
     background: #d1fae5;
-
     color: #065f46;
-
-    text-align: center;
 }
 
 .standard {
-
     background: #fef3c7;
-
     color: #92400e;
-
-    text-align: center;
 }
 
 .premium {
-
     background: #fee2e2;
-
     color: #991b1b;
-
-    text-align: center;
 }
 
+/* ===== Tổng kết ===== */
 
 .recipe-summary {
 
-    margin-top: 40px;
+    margin-top: 32px;
 
-    padding: 24px;
+    padding: 20px;
 
-    border-radius: 14px;
+    border-radius: 12px;
 
     background: #f8f4eb;
 
@@ -272,23 +121,24 @@ h3 {
     justify-content: space-between;
     align-items: center;
 
-    font-size: 17px;
+    margin-bottom: 10px;
 
-    color: #5d4635;
+    font-size: 16px;
+}
+
+.summary-row:last-child {
+    margin-bottom: 0;
 }
 
 .summary-row strong {
-
     font-size: 18px;
-
-    color: #231f1b;
 }
 
 .discount {
 
-    margin-top: 10px;
+    margin-top: 12px;
 
-    padding: 14px 18px;
+    padding: 14px;
 
     border-radius: 10px;
 
@@ -298,8 +148,5 @@ h3 {
 }
 
 .discount strong {
-
     color: #7f2718;
-
-    font-size: 22px;
 }

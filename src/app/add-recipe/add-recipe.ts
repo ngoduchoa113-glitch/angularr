@@ -3,10 +3,15 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { RecipeModel } from '../models';
 import { RecipeService } from '../recipe-service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-add-recipe',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule],
   templateUrl: './add-recipe.html',
   styleUrl: './add-recipe.css',
 })
@@ -19,6 +24,7 @@ export class AddRecipe {
   protected readonly recipeForm = this.fb.group({
     name: ['', Validators.required],
     price: [null, [Validators.required, Validators.min(1)]],
+    videoUrl: [''],
     description: ['', Validators.required],
     ingredients: ['', Validators.required],
     imgUrl: [''],

@@ -1,158 +1,189 @@
-<a class="back-link" routerLink="/recipes">
-    ← Quay lại danh sách
+<a mat-button routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    Quay lại danh sách
 </a>
 
 @if (selectedRecipe(); as recipe) {
 
-<div class="recipe-card">
+<mat-card class="recipe-card">
 
-    <!-- Header -->
-    <h2 class="recipe-title">
-        {{ recipe.name }}
-    </h2>
+    <img mat-card-image [src]="recipe.imgUrl" [alt]="'Ảnh của ' + recipe.name">
 
-    <img class="recipe-image" [src]="recipe.imgUrl" [alt]="recipe.name">
+    <mat-card-header>
 
-    <p class="recipe-description">
-        {{ recipe.description }}
-    </p>
+        <mat-card-title>
+            {{ recipe.name }}
+        </mat-card-title>
 
-    <!-- Price -->
-    <div class="recipe-price">
+        <mat-card-subtitle>
+            {{ recipe.description }}
+        </mat-card-subtitle>
 
-        <p>
-            Price:
-            <span>
-                {{ recipe.price | number }} VND
-            </span>
-        </p>
-    </div>
+    </mat-card-header>
 
-    @if (recipe.price < 100000) { <p class="price-tag budget">
-        Bình dân
-        </p>
+    <mat-card-content>
 
-        } @else if (recipe.price <= 150000) { <p class="price-tag standard">
-            Tiêu chuẩn
+        <!-- Giá -->
+
+        <div class="recipe-price">
+
+            <p>
+                Giá:
+                <strong>
+                    {{ recipe.price | number }} VNĐ
+                </strong>
             </p>
 
-            } @else {
+        </div>
 
-            <p class="price-tag premium">
-                Cao cấp
+        @if (recipe.price < 100000) { <p class="price-tag budget">
+            Bình dân
             </p>
 
-            }
+            } @else if (recipe.price <= 150000) { <p class="price-tag standard">
+                Tiêu chuẩn
+                </p>
 
-            <!-- Servings -->
-            <div class="servings-control">
+                } @else {
 
-                <button (click)="decreaseServings()" [disabled]="soPhanAn() === 1" aria-label="Decrease servings">
-
-                    −
-
-                </button>
-
-                <span class="servings-number">
-                    {{ soPhanAn() }}
-                </span>
-
-                <button (click)="increaseServings()" aria-label="Increase servings">
-
-                    +
-
-                </button>
-
-            </div>
-
-            <!-- Ingredients -->
-            <h3>Ingredients</h3>
-
-            <ul class="ingredient-list">
-
-                @for (
-                ingredient of adjustedIngredients();
-                track ingredient.name;
-                let i = $index;
-                let even = $even
-                ) {
-
-                <li class="ingredient-item" [class.row-alt]="even">
-
-                    <span>
-                        {{ i + 1 }}. {{ ingredient.name }}
-                    </span>
-
-                    <span>
-                        {{ ingredient.quantity | number }}
-                        {{ ingredient.unit }}
-                    </span>
-
-                </li>
-
-                } @empty {
-
-                <li class="ingredient-empty">
-                    Không có nguyên liệu.
-                </li>
+                <p class="price-tag premium">
+                    Cao cấp
+                </p>
 
                 }
 
-            </ul>
+                <!-- Số phần -->
 
-            <!-- Summary -->
-            <div class="recipe-summary">
+                <div class="servings-control">
 
-                <div class="summary-row">
+                    <button mat-icon-button type="button" (click)="decreaseServings()" [disabled]="soPhanAn() === 1"
+                        aria-label="Giảm số phần ăn">
 
-                    <span>Total ingredients:</span>
+                        <mat-icon>remove</mat-icon>
 
-                    <strong>
-                        {{ tongSoNguyenLieu() | number }}
-                    </strong>
+                    </button>
 
-                </div>
+                    <span class="servings-number" aria-live="polite">
 
-                <div class="summary-row">
+                        {{ soPhanAn() }}
 
-                    <span>Total:</span>
+                    </span>
 
-                    <strong>
-                        {{ tongTien() | number }} VNĐ
-                    </strong>
+                    <button mat-icon-button type="button" (click)="increaseServings()" aria-label="Tăng số phần ăn">
 
-                </div>
+                        <mat-icon>add</mat-icon>
 
-                @if (soPhanAn() >= 5) {
-
-                <div class="summary-row discount">
-
-                    <span>Discounted price:</span>
-
-                    <strong>
-                        {{ tongTienSauGiam() | number }} VNĐ
-                    </strong>
+                    </button>
 
                 </div>
 
-                }
+                <!-- Nguyên liệu -->
 
-            </div>
+                <mat-divider></mat-divider>
 
-</div>
+                <h3>Nguyên liệu</h3>
+
+                <mat-list>
+
+                    @for (
+                    ingredient of adjustedIngredients();
+                    track ingredient.name;
+                    let i = $index
+                    ) {
+
+                    <mat-list-item>
+
+                        <span matListItemTitle>
+
+                            {{ i + 1 }}. {{ ingredient.name }}
+
+                        </span>
+
+                        <span matListItemMeta>
+
+                            {{ ingredient.quantity | number }}
+                            {{ ingredient.unit }}
+
+                        </span>
+
+                    </mat-list-item>
+
+                    } @empty {
+
+                    <mat-list-item>
+
+                        Không có nguyên liệu.
+
+                    </mat-list-item>
+
+                    }
+
+                </mat-list>
+
+                <!-- Tổng kết -->
+
+                <div class="recipe-summary">
+
+                    <div class="summary-row">
+
+                        <span>Tổng nguyên liệu:</span>
+
+                        <strong>
+
+                            {{ tongSoNguyenLieu() | number }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>Tổng tiền:</span>
+
+                        <strong>
+
+                            {{ tongTien() | number }} VNĐ
+
+                        </strong>
+
+                    </div>
+
+                    @if (soPhanAn() >= 5) {
+
+                    <div class="summary-row discount">
+
+                        <span>Sau giảm giá:</span>
+
+                        <strong>
+
+                            {{ tongTienSauGiam() | number }} VNĐ
+
+                        </strong>
+
+                    </div>
+
+                    }
+
+                </div>
+
+    </mat-card-content>
+
+</mat-card>
 
 } @else {
 
-<div class="recipe-card">
+<mat-card class="recipe-card">
 
-    <h2>
-        Không tìm thấy công thức.
-    </h2>
+    <mat-card-content>
 
-    <p>
-        Công thức bạn đang tìm không tồn tại hoặc đã bị xóa.
-    </p>
+        <h2>Không tìm thấy công thức.</h2>
 
-</div>
+        <p>
+            Công thức bạn đang tìm không tồn tại hoặc đã bị xóa.
+        </p>
+
+    </mat-card-content>
+
+</mat-card>
 
 }

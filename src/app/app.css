@@ -1,24 +1,32 @@
-:host {
+mat-toolbar {
 
     display: flex;
 
-    flex-direction: column;
+    justify-content: center;
 
     align-items: center;
 
-    min-height: 100vh;
+    gap: 14px;
 
-    background: #f4ebdd;
+    height: 72px;
 
-    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .12);
 }
 
-h1 {
-    margin: 0 0 50px;
+.app-logo {
 
-    font-family: "Cormorant Garamond", serif;
-    font-size: 100px;
+    width: 42px;
+
+    height: 42px;
+
+    object-fit: contain;
+}
+
+.app-title {
+
+    font-size: 30px;
+
     font-weight: 700;
 
-    color: #1f1f1f;
+    letter-spacing: .5px;
 }

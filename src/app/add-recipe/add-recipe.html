@@ -1,59 +1,29 @@
-<a class="back-link" routerLink="/recipes">
-    ← Quay lại danh sách
-</a>
+<mat-form-field appearance="outline">
 
-<div class="form-card">
+    <mat-label>Hình ảnh</mat-label>
 
-    <h2>📝 Thêm công thức mới</h2>
+    <input matInput formControlName="imgUrl" placeholder="https://...">
 
-    <form [formGroup]="recipeForm" (ngSubmit)="save()" class="recipe-form">
+    <mat-hint>Không bắt buộc</mat-hint>
 
-        <div class="field">
+</mat-form-field>
 
-            <label>Tên món</label>
+<!-- Thêm ngay dưới đây -->
 
-            <input type="text" formControlName="name" placeholder="Ví dụ: Phở bò">
+<mat-form-field appearance="outline">
 
-        </div>
+    <mat-label>Video YouTube</mat-label>
 
-        <div class="field">
+    <input matInput formControlName="videoUrl" placeholder="https://www.youtube.com/watch?v=xxxx">
 
-            <label>Giá</label>
+    <mat-hint>Không bắt buộc</mat-hint>
 
-            <input type="number" formControlName="price" placeholder="100">
+</mat-form-field>
 
-        </div>
+<button matButton="filled" type="submit">
 
-        <div class="field">
+    <mat-icon>save</mat-icon>
 
-            <label>Mô tả</label>
+    Lưu công thức
 
-            <textarea rows="4" formControlName="description" placeholder="Mô tả món ăn...">
-            </textarea>
-
-        </div>
-
-        <div class="field">
-
-            <label>Nguyên liệu</label>
-
-            <textarea rows="3" formControlName="ingredients" placeholder="Bò, Hành, Tiêu">
-            </textarea>
-
-        </div>
-
-        <div class="field">
-
-            <label>Hình ảnh (không bắt buộc)</label>
-
-            <input type="text" formControlName="imgUrl" placeholder="https://...">
-
-        </div>
-
-        <button class="submit-button">
-            ➕ Lưu công thức
-        </button>
-
-    </form>
-
-</div>
+</button>

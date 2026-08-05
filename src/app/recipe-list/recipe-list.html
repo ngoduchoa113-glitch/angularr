@@ -1,66 +1,57 @@
-<div class="recipe-layout">
+<mat-nav-list class="recipe-list">
 
-    <a class="add-button" routerLink="/recipes/new">
-        ➕ Thêm công thức
+    @for (recipe of sortedRecipes(); track recipe.id) {
+
+    @if (recipe.videoUrl) {
+
+    <a mat-list-item [href]="recipe.videoUrl" target="_blank">
+
+        <span matListItemTitle>
+
+            {{ recipe.name }}
+
+            @if (recipe.id === recipeDatNhat().id) {
+            💎
+            }
+
+        </span>
+
+        <button mat-icon-button matListItemMeta (click)="toggleFavorite(recipe, $event)">
+
+            <mat-icon>
+                {{ recipe.isFavorite ? 'star' : 'star_border' }}
+            </mat-icon>
+
+        </button>
+
     </a>
 
-    <div class="search-group">
-        <label for="search-recipe">
-            Tìm kiếm món ăn
-        </label>
+    } @else {
 
-        <input id="search-recipe" type="text" placeholder="Ví dụ: Pizza..." [ngModel]="searchText()"
-            (ngModelChange)="searchText.set($event)">
-    </div>
+    <a mat-list-item [routerLink]="['/recipes', recipe.id]">
 
-    <div class="sort-buttons">
-        <button (click)="setSort('asc')">
-            ↑ Giá tăng dần
+        <span matListItemTitle>
+
+            {{ recipe.name }}
+
+            @if (recipe.id === recipeDatNhat().id) {
+            💎
+            }
+
+        </span>
+
+        <button mat-icon-button matListItemMeta (click)="toggleFavorite(recipe, $event)">
+
+            <mat-icon>
+                {{ recipe.isFavorite ? 'star' : 'star_border' }}
+            </mat-icon>
+
         </button>
 
-        <button (click)="setSort('desc')">
-            ↓ Giá giảm dần
-        </button>
-    </div>
+    </a>
 
-    @if (isSearching()) {
-    <p class="result-count">
-        Tìm thấy {{ resultCount() }} món
-    </p>
     }
 
-    <ul class="picker-buttons">
+    }
 
-        @for (recipe of sortedRecipes(); track recipe.id) {
-
-        <li class="recipe-item">
-
-            <a class="recipe-button" [routerLink]="['/recipes', recipe.id]">
-
-                {{ recipe.name }}
-
-                @if (recipe.id === recipeDatNhat().id) {
-                <span class="diamond">💎</span>
-                }
-
-            </a>
-
-            <span class="favorite-star" (click)="recipeService.toggleFavorite(recipe.id); $event.stopPropagation()">
-
-                {{ recipe.isFavorite ? '⭐' : '☆' }}
-
-            </span>
-
-        </li>
-
-        } @empty {
-
-        <li class="empty-message">
-            Không tìm thấy món nào.
-        </li>
-
-        }
-
-    </ul>
-
-</div>
+</mat-nav-list>

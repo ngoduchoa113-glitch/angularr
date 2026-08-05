@@ -9,14 +9,34 @@ import { DecimalPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RecipeService } from '../recipe-service';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-recipe-detail',
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, MatCardModule, MatButtonModule, MatIconModule, MatListModule, MatDividerModule],
   templateUrl: './recipe-detail.html',
   styleUrl: './recipe-detail.css',
 })
 export class RecipeDetail {
+
+  private sanitizer = inject(DomSanitizer);
+
+  protected readonly youtubeUrl = computed((): SafeResourceUrl => {
+
+    const url = this.selectedRecipe()?.videoUrl ?? '';
+
+    const id = url.split('v=')[1];
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      `https://www.youtube.com/embed/${id}`
+    );
+
+  });
 
   private readonly route = inject(ActivatedRoute);
 
