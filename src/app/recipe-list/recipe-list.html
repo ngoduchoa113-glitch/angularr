@@ -1,3 +1,51 @@
+<div class="top-actions">
+
+    <a mat-filled-button class="add-button" routerLink="/recipes/new">
+
+        <mat-icon>add</mat-icon>
+
+        Thêm công thức
+
+    </a>
+
+    <div class="search-group">
+
+        <mat-form-field appearance="outline">
+
+            <mat-label>Tìm món ăn</mat-label>
+
+            <input matInput type="search" [ngModel]="searchText()" (ngModelChange)="searchText.set($event)">
+
+            <mat-icon matSuffix>
+                search
+            </mat-icon>
+
+        </mat-form-field>
+
+    </div>
+
+</div>
+
+<div class="sort-buttons">
+
+    <button mat-stroked-button (click)="setSort('asc')">
+        ↑ Giá tăng
+    </button>
+
+    <button mat-stroked-button (click)="setSort('desc')">
+        ↓ Giá giảm
+    </button>
+
+</div>
+
+@if (isSearching()) {
+
+<p class="result-count">
+    Tìm thấy {{ resultCount() }} món
+</p>
+
+}
+
 <mat-nav-list class="recipe-list">
 
     @for (recipe of sortedRecipes(); track recipe.id) {

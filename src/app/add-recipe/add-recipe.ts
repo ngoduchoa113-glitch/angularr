@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { RecipeModel } from '../models';
 import { RecipeService } from '../recipe-service';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-add-recipe',
-  imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule],
   templateUrl: './add-recipe.html',
   styleUrl: './add-recipe.css',
 })
