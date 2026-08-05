@@ -1,29 +1,80 @@
-<mat-form-field appearance="outline">
+<a mat-button routerLink="/recipes" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    Quay lại danh sách
+</a>
 
-    <mat-label>Hình ảnh</mat-label>
+<mat-card class="form-card">
 
-    <input matInput formControlName="imgUrl" placeholder="https://...">
+    <mat-card-header>
 
-    <mat-hint>Không bắt buộc</mat-hint>
+        <span class="eyebrow">Bộ sưu tập công thức</span>
 
-</mat-form-field>
+        <mat-card-title>
+            Thêm công thức mới
+        </mat-card-title>
 
-<!-- Thêm ngay dưới đây -->
+    </mat-card-header>
 
-<mat-form-field appearance="outline">
+    <mat-card-content>
 
-    <mat-label>Video YouTube</mat-label>
+        <form [formGroup]="recipeForm" (ngSubmit)="save()" class="recipe-form">
 
-    <input matInput formControlName="videoUrl" placeholder="https://www.youtube.com/watch?v=xxxx">
+            <mat-form-field appearance="outline">
 
-    <mat-hint>Không bắt buộc</mat-hint>
+                <mat-label>Tên món</mat-label>
 
-</mat-form-field>
+                <input matInput type="text" formControlName="name">
 
-<button matButton="filled" type="submit">
+            </mat-form-field>
 
-    <mat-icon>save</mat-icon>
+            <mat-form-field appearance="outline">
 
-    Lưu công thức
+                <mat-label>Giá</mat-label>
 
-</button>
+                <input matInput type="number" formControlName="price">
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Mô tả</mat-label>
+
+                <textarea matInput rows="4" formControlName="description">
+                </textarea>
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Nguyên liệu</mat-label>
+
+                <textarea matInput rows="3" formControlName="ingredients">
+                </textarea>
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Hình ảnh</mat-label>
+
+                <input matInput formControlName="imgUrl">
+
+                <mat-hint>
+                    Không bắt buộc
+                </mat-hint>
+
+            </mat-form-field>
+
+            <button mat-filled-button type="submit">
+
+                <mat-icon>save</mat-icon>
+
+                Lưu công thức
+
+            </button>
+
+        </form>
+
+    </mat-card-content>
+
+</mat-card>

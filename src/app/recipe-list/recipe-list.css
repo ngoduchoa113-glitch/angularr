@@ -45,6 +45,17 @@
     margin-bottom: 18px;
 }
 
+.sort-buttons button {
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    font-size: 13px;
+}
+
 /* ====================== */
 
 .result-count {
@@ -55,20 +66,22 @@
 
     margin-bottom: 18px;
 
-    color: #795548;
+    color: var(--mat-sys-on-surface-variant);
 }
 
 /* ====================== */
 
 .recipe-list {
 
-    border-radius: 18px;
+    border-radius: 0;
 
     overflow: hidden;
 
-    background: white;
+    background: var(--mat-sys-surface-container);
 
-    box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+    border: 1px solid var(--mat-sys-outline-variant);
+
+    box-shadow: none;
 }
 
 .recipe-list a {
@@ -80,7 +93,7 @@
 
 .recipe-list a:hover {
 
-    background: #fff6ec;
+    background: var(--mat-sys-surface-container-high);
 }
 
 /* ====================== */
@@ -100,4 +113,10 @@ button:hover mat-icon {
 .add-button {
 
     white-space: nowrap;
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
 }

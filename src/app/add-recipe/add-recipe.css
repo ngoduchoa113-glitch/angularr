@@ -1,21 +1,96 @@
+/*
+  Page-specific layout on top of the app-wide Ferrari-inspired theme
+  (see material-theme.scss for the shared --mat-sys-* color/shape tokens).
+*/
 :host {
 
     display: flex;
 
     justify-content: center;
 
-    padding: 40px 20px 60px;
+    position: relative;
+
+    padding: 64px 24px 96px;
+}
+
+.back-link {
+
+    position: absolute;
+
+    top: 24px;
+
+    left: 24px;
+
+    color: var(--mat-sys-on-surface-variant) !important;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
 }
 
 .form-card {
 
-    width: min(760px, 100%);
+    width: min(680px, 100%);
 
-    border-radius: 20px !important;
+    border-radius: 0 !important;
 
-    padding: 16px;
+    border: 1px solid var(--mat-sys-outline-variant);
 
-    box-shadow: 0 12px 28px rgba(0, 0, 0, .12);
+    background: var(--mat-sys-surface-container) !important;
+
+    padding: 48px;
+
+    box-shadow: none !important;
+}
+
+.eyebrow {
+
+    display: block;
+
+    color: var(--mat-sys-primary);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.14em;
+
+    text-transform: uppercase;
+
+    margin-bottom: 8px;
+}
+
+mat-card-title {
+
+    font-family: 'Cormorant Garamond', serif !important;
+
+    font-weight: 600 !important;
+
+    font-size: 34px !important;
+
+    letter-spacing: -0.02em;
+
+    color: var(--mat-sys-on-surface);
+}
+
+mat-label {
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+
+    font-size: 0.72em;
+
+    font-weight: 600;
+}
+
+mat-hint {
+
+    letter-spacing: 0.02em;
 }
 
 .recipe-form {
@@ -24,9 +99,9 @@
 
     flex-direction: column;
 
-    gap: 12px;
+    gap: 24px;
 
-    margin-top: 18px;
+    margin-top: 32px;
 }
 
 mat-form-field {
@@ -38,5 +113,15 @@ button[mat-filled-button] {
 
     align-self: flex-end;
 
-    margin-top: 12px;
+    margin-top: 24px;
+
+    padding: 0 32px;
+
+    height: 48px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
 }

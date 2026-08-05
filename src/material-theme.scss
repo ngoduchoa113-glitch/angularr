@@ -1,18 +1,38 @@
 @use '@angular/material' as mat;
 
+// Editorial dark theme in the spirit of cinematic-luxury automotive
+// marketing sites: near-black canvas, a single scarce red accent, sharp
+// corners, a serif brand face for display type over a plain sans for UI.
 html {
   height: 100%;
 
-  @include mat.theme((color: (primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+  @include mat.theme((color: (primary: mat.$red-palette,
+        tertiary: mat.$red-palette,
+        theme-type: dark,
       ),
-      typography: Roboto,
+      typography: (plain-family: 'Lato, sans-serif',
+        brand-family: 'Cormorant Garamond, serif',
+        bold-weight: 700,
+        medium-weight: 700,
+        regular-weight: 400,
+      ),
       density: 0,
     ));
+
+  // M3's dark-mode primary auto-lightens for contrast (a pale pink here) —
+  // pin the brand accent to a fixed racing red instead, and flatten the
+  // pill/rounded shapes M3 uses by default down to sharp editorial corners.
+  --mat-sys-primary: #b3271d;
+  --mat-sys-on-primary: #fdf6ee;
+  --mat-sys-primary-container: #7d1b14;
+  --mat-sys-on-primary-container: #ffdad4;
+  --mat-sys-corner-full: 0px;
+  --mat-sys-corner-large: 0px;
+  --mat-sys-corner-medium: 0px;
 }
 
 body {
-  color-scheme: light;
+  color-scheme: dark;
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
