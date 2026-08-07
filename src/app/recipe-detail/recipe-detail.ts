@@ -6,9 +6,12 @@ import {
 } from '@angular/core';
 
 import { DecimalPipe } from '@angular/common';
+import { httpResource } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RecipeService } from '../recipe-service';
+import { toRecipeModel } from '../recipe-mapper';
+import { RecipeStore } from '../stores/recipe-store';
+import { MealsResponse } from '../models';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,16 +43,41 @@ export class RecipeDetail {
 
   private readonly route = inject(ActivatedRoute);
 
-  private readonly recipeService = inject(RecipeService);
+  private readonly store = inject(RecipeStore);
 
   private readonly params = toSignal(this.route.paramMap);
 
+  // 1. id từ URL — tách riêng ra vì cả hai chỗ dưới đều cần
+  private readonly recipeId = computed(() => Number(this.params()?.get('id')));
+
+  // 2. thử local trước
+  protected readonly localRecipe = computed(() => {
+    return this.store.getRecipeById(this.recipeId());
+  });
+
+  // 3. chỉ gọi mạng khi local không có
+  protected readonly apiMeal = httpResource<MealsResponse>(() => {
+    if (this.localRecipe()) {
+      return undefined; // ← có rồi, khỏi gọi
+    }
+    return `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${this.recipeId()}`;
+  });
+
   protected readonly selectedRecipe = computed(() => {
+    if (this.localRecipe()) {
+      return this.localRecipe();
+    }
 
-    const id = Number(this.params()?.get('id'));
+    if (!this.apiMeal.hasValue()) {
+      return undefined;
+    }
 
-    return this.recipeService.getRecipeById(id);
+    const meal = this.apiMeal.value().meals?.[0];
+    if (!meal) {
+      return undefined;
+    }
 
+    return toRecipeModel(meal);
   });
 
   protected readonly soPhanAn = signal(1);
@@ -64,7 +92,9 @@ export class RecipeDetail {
 
     return recipe.ingredients.map(ingredient => ({
       ...ingredient,
-      quantity: ingredient.quantity * this.soPhanAn(),
+      quantity: typeof ingredient.quantity === 'number'
+        ? ingredient.quantity * this.soPhanAn()
+        : ingredient.quantity,
     }));
 
   });
@@ -94,7 +124,7 @@ export class RecipeDetail {
   protected readonly tongSoNguyenLieu = computed(() => {
 
     return this.adjustedIngredients().reduce((tong, ingredient) => {
-      return tong + ingredient.quantity;
+      return tong + (typeof ingredient.quantity === 'number' ? ingredient.quantity : 0);
     }, 0);
 
   });

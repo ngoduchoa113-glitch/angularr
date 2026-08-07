@@ -21,6 +21,12 @@
 
     left: 24px;
 
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
     color: var(--mat-sys-on-surface-variant) !important;
 
     font-size: 13px;
@@ -36,7 +42,7 @@
 
     width: min(680px, 100%);
 
-    border-radius: 0 !important;
+    border-radius: 20px !important;
 
     border: 1px solid var(--mat-sys-outline-variant);
 
@@ -109,9 +115,15 @@ mat-form-field {
     width: 100%;
 }
 
-button[mat-filled-button] {
+button[mat-flat-button] {
 
     align-self: flex-end;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
 
     margin-top: 24px;
 

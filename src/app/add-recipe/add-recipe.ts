@@ -1,65 +1,69 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { form, submit, FormField, required, email } from '@angular/forms/signals';
+import { RouterLink } from '@angular/router';
 import { RecipeModel } from '../models';
-import { RecipeService } from '../recipe-service';
+import { RecipeStore } from '../stores/recipe-store';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-recipe',
-  imports: [ReactiveFormsModule, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule],
+  imports: [FormField, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatCardModule],
   templateUrl: './add-recipe.html',
   styleUrl: './add-recipe.css',
 })
 export class AddRecipe {
 
-  private readonly fb = inject(FormBuilder);
-  private readonly recipeService = inject(RecipeService);
+  private readonly store = inject(RecipeStore);
   private readonly router = inject(Router);
 
-  protected readonly recipeForm = this.fb.group({
-    name: ['', Validators.required],
-    price: [null, [Validators.required, Validators.min(1)]],
-    videoUrl: [''],
-    description: ['', Validators.required],
-    ingredients: ['', Validators.required],
-    imgUrl: [''],
+  protected readonly recipeModel = signal({
+    name: '',
+    description: '',
+    authorEmail: '',
   });
 
-  protected save(): void {
-    if (this.recipeForm.invalid) {
-      this.recipeForm.markAllAsTouched();
-      return;
+  protected readonly recipeForm = form(this.recipeModel, (path) => {
+    required(path.name, { message: 'Tên không được bỏ trống' }),
+      required(path.description, { message: 'Mô tả không được bỏ trống' }),
+      required(path.authorEmail, { message: 'Email tác giả không được bỏ trống' }),
+      email(path.authorEmail, { message: 'Email không hợp lệ' })
+  });
+
+  protected async save(event: Event): Promise<void> {
+    event.preventDefault();
+
+    const ok = await submit(this.recipeForm, async () => {
+      const { name, description, authorEmail } = this.recipeModel();
+
+      const newRecipe: RecipeModel = {
+        id: this.nextId(),
+        name,
+        description,
+        authorEmail,
+        price: 100000,
+        ingredients: [],
+        isFavorite: false,
+        imgUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600',
+      };
+
+      this.store.addRecipe(newRecipe);
+    });
+
+    if (ok) {
+      this.router.navigate(['/recipes', this.nextId() - 1]);
     }
-
-    const currentRecipes = this.recipeService.recipes();
-    const nextId = Math.max(...currentRecipes.map((recipe) => recipe.id), 0) + 1;
-
-    const newRecipe: RecipeModel = {
-      id: nextId,
-      name: this.recipeForm.value.name!,
-      price: this.recipeForm.value.price!,
-      description: this.recipeForm.value.description!,
-      imgUrl:
-        this.recipeForm.value.imgUrl ||
-        'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600',
-      isFavorite: false,
-      ingredients: [
-        {
-          name: this.recipeForm.value.ingredients!,
-          quantity: 1,
-          unit: 'cái',
-        },
-      ],
-    };
-
-    this.recipeService.addRecipe(newRecipe);
-    this.router.navigate(['/recipes']);
   }
+
+  private nextId(): number {
+    const ids = this.store.recipes().map((recipe) => recipe.id);
+    return Math.max(...ids, 0) + 1;
+  }
+
+
 
 }

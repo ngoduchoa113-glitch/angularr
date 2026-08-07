@@ -1,6 +1,6 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RecipeService } from '../recipe-service';
+import { RecipeStore } from '../stores/recipe-store';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,21 +8,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { RecipeModel } from '../models';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-recipe-list',
-  imports: [FormsModule, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatListModule, MatIconModule],
+  imports: [MatProgressSpinnerModule, FormsModule, RouterLink, MatButtonModule, MatFormFieldModule, MatInputModule, MatListModule, MatIconModule,],
   templateUrl: './recipe-list.html',
   styleUrl: './recipe-list.css'
 })
 export class RecipeList {
 
   protected readonly resultCount = computed(() => {
-    return this.filteredRecipes().length;
+    return this.store.filteredRecipes().length;
   });
 
   protected readonly isSearching = computed(() =>
-    this.searchText().trim() !== ''
+    this.store.keyword().trim() !== ''
   );
 
   toggleFavorite(recipe: RecipeModel, event: MouseEvent) {
@@ -31,30 +32,14 @@ export class RecipeList {
 
     event.stopPropagation();
 
-    this.recipeService.toggleFavorite(recipe.id);
+    this.store.toggleFavorite(recipe.id);
 
   }
 
   protected readonly sortType = signal<'asc' | 'desc'>('asc');
 
-  protected readonly filteredRecipes = computed(() => {
-
-    const keyword = this.searchText()
-      .trim()
-      .toLowerCase();
-
-    const all = this.recipeService.recipes();
-
-    return all.filter(recipe =>
-      recipe.name
-        .toLowerCase()
-        .includes(keyword)
-    );
-
-  });
-
   protected readonly sortedRecipes = computed(() => {
-    const list = [...this.filteredRecipes()];
+    const list = [...this.store.filteredRecipes()];
 
     return list.sort((a, b) =>
       this.sortType() === 'asc'
@@ -67,13 +52,11 @@ export class RecipeList {
     this.sortType.set(type);
   }
 
-  public readonly recipeService = inject(RecipeService);
-
-  protected readonly searchText = signal('');
+  protected readonly store = inject(RecipeStore);
 
   protected readonly recipeDatNhat = computed(() => {
 
-    const recipes = this.recipeService.recipes();
+    const recipes = this.store.recipes();
 
     const giaLonNhat = Math.max(
       ...recipes.map(recipe => recipe.price)

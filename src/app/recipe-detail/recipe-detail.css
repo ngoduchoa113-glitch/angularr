@@ -8,6 +8,17 @@
     padding: 30px 0 60px;
 }
 
+/* ===== Nút quay lại ===== */
+
+.back-link {
+    margin-bottom: 24px;
+
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
 /* ===== Card ===== */
 
 .recipe-card {
@@ -15,8 +26,17 @@
 
     border: 1px solid var(--mat-sys-outline-variant);
     box-shadow: none;
+    overflow: hidden;
 
     animation: fadeIn .35s ease;
+}
+
+.recipe-card img[mat-card-image] {
+    transition: transform .5s cubic-bezier(.2, .8, .2, 1);
+}
+
+.recipe-card:hover img[mat-card-image] {
+    transform: scale(1.04);
 }
 
 @keyframes fadeIn {
@@ -59,6 +79,17 @@ mat-card-subtitle {
     gap: 18px;
 }
 
+.servings-control button[mat-icon-button] {
+    border: 1px solid var(--mat-sys-outline);
+    border-radius: 9999px;
+    background: var(--mat-sys-surface-container-high);
+}
+
+.servings-control button[mat-icon-button]:disabled {
+    border-color: var(--mat-sys-outline-variant);
+    background: transparent;
+}
+
 .servings-number {
     min-width: 40px;
 
@@ -79,6 +110,20 @@ h3 {
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* ===== Danh sách nguyên liệu ===== */
+
+[matListItemTitle] {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+}
+
+[matListItemMeta] {
+    font-size: 15px;
+    font-weight: 700;
     color: var(--mat-sys-on-surface-variant);
 }
 
@@ -104,8 +149,8 @@ h3 {
 }
 
 .premium {
-    background: var(--mat-sys-primary);
-    color: var(--mat-sys-on-primary);
+    background: var(--gold-accent);
+    color: var(--on-gold-accent);
 }
 
 /* ===== Tổng kết ===== */
@@ -116,7 +161,7 @@ h3 {
 
     padding: 20px;
 
-    border-radius: 0;
+    border-radius: 12px;
 
     border: 1px solid var(--mat-sys-outline-variant);
 
@@ -156,13 +201,13 @@ h3 {
 
     padding: 14px;
 
-    border-radius: 0;
+    border-radius: 8px;
 
-    border-left: 3px solid var(--mat-sys-primary);
+    border-left: 3px solid var(--gold-accent);
 
     background: var(--mat-sys-surface-container-high);
 }
 
 .discount strong {
-    color: var(--mat-sys-primary);
+    color: var(--gold-accent);
 }

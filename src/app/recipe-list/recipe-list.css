@@ -6,7 +6,7 @@
 
     margin: auto;
 
-    padding: 0 20px 40px;
+    padding: 48px 20px 40px;
 }
 
 /* ====================== */
@@ -15,7 +15,7 @@
 
     display: flex;
 
-    align-items: flex-start;
+    align-items: center;
 
     gap: 20px;
 
@@ -73,7 +73,7 @@
 
 .recipe-list {
 
-    border-radius: 0;
+    border-radius: 18px;
 
     overflow: hidden;
 
@@ -88,12 +88,39 @@
 
     height: 72px;
 
-    transition: .25s;
+    border-radius: 6px;
+
+    transition: transform .22s cubic-bezier(.2, .8, .2, 1), background .22s ease, box-shadow .22s ease;
 }
 
-.recipe-list a:hover {
+.recipe-list [matListItemTitle] {
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    color: var(--mat-sys-on-surface);
+}
+
+.recipe-list a:hover,
+.recipe-list a:focus-within {
 
     background: var(--mat-sys-surface-container-high);
+
+    transform: scale(1.015);
+
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
+
+    position: relative;
+
+    z-index: 1;
+}
+
+/* ====================== */
+
+button.is-favorite mat-icon {
+
+    color: var(--gold-accent);
 }
 
 /* ====================== */
@@ -112,6 +139,12 @@ button:hover mat-icon {
 
 .add-button {
 
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
     white-space: nowrap;
 
     font-weight: 700;
@@ -119,4 +152,13 @@ button:hover mat-icon {
     letter-spacing: 0.08em;
 
     text-transform: uppercase;
+}
+
+.add-button mat-icon {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
 }

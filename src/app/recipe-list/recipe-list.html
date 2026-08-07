@@ -1,6 +1,6 @@
 <div class="top-actions">
 
-    <a mat-filled-button class="add-button" routerLink="/recipes/new">
+    <a mat-flat-button class="add-button" routerLink="/recipes/new">
 
         <mat-icon>add</mat-icon>
 
@@ -14,7 +14,8 @@
 
             <mat-label>Tìm món ăn</mat-label>
 
-            <input matInput type="search" [ngModel]="searchText()" (ngModelChange)="searchText.set($event)">
+            <input matInput type="search" [ngModel]="store.keyword()"
+                (ngModelChange)="store.setKeyword($event)">
 
             <mat-icon matSuffix>
                 search
@@ -64,7 +65,8 @@
 
         </span>
 
-        <button mat-icon-button matListItemMeta (click)="toggleFavorite(recipe, $event)">
+        <button mat-icon-button matListItemMeta [class.is-favorite]="recipe.isFavorite"
+            (click)="toggleFavorite(recipe, $event)">
 
             <mat-icon>
                 {{ recipe.isFavorite ? 'star' : 'star_border' }}
@@ -88,7 +90,8 @@
 
         </span>
 
-        <button mat-icon-button matListItemMeta (click)="toggleFavorite(recipe, $event)">
+        <button mat-icon-button matListItemMeta [class.is-favorite]="recipe.isFavorite"
+            (click)="toggleFavorite(recipe, $event)">
 
             <mat-icon>
                 {{ recipe.isFavorite ? 'star' : 'star_border' }}
@@ -102,4 +105,30 @@
 
     }
 
+
+    @let meals = store.meals;
+    @if(meals.isLoading()) {
+    <mat-spinner diameter="50" aria-label="polite"></mat-spinner>
+    }
+    @else if(meals.error()) {
+    <p>LỖI RỒI NGHỈ MẸ ĐI CON</p>
+    <button matButton="filled" type="button" (click)="meals.reload()">
+        <mat-icon>refresh</mat-icon>
+        thử lại
+    </button>
+
+    } @else {
+    <mat-nav-list>
+        @for (recipe of store.apiRecipes(); track recipe.id) {
+        <a mat-list-item [routerLink]="['/recipes', recipe.id]">
+            <img matListItemAvatar [src]="recipe.imgUrl" alt="" />
+            <span matListItemTitle>{{recipe.name}}</span>
+            <span matListItemLine>{{ recipe.description}}</span>
+            <span matListItemLine>{{recipe.ingredients.length}}</span>
+        </a>
+        } @empty {
+        <li>không có món nào từ máy chủ</li>
+        }
+    </mat-nav-list>
+    }
 </mat-nav-list>

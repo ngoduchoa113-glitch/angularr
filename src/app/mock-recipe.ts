@@ -10,11 +10,11 @@ export const MOCK_RECIPES: RecipeModel[] = [
         imgUrl: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=600',
         isFavorite: true,
         ingredients: [
-            { name: 'Mì Spaghetti', quantity: 200, unit: 'g' },
-            { name: 'Thịt má heo Guanciale', quantity: 100, unit: 'g' },
-            { name: 'Lòng đỏ trứng', quantity: 4, unit: 'cái' },
-            { name: 'Phô mai Pecorino Romano', quantity: 50, unit: 'g' },
-            { name: 'Tiêu đen', quantity: 1, unit: 'thìa cà phê' },
+            { name: 'Mì Spaghetti', quantity: 200, unit: 'g', measure: '200g' },
+            { name: 'Thịt má heo Guanciale', quantity: 100, unit: 'g', measure: '100g' },
+            { name: 'Lòng đỏ trứng', quantity: 4, unit: 'cái', measure: '4 cái' },
+            { name: 'Phô mai Pecorino Romano', quantity: 50, unit: 'g', measure: '50g' },
+            { name: 'Tiêu đen', quantity: 1, unit: 'thìa cà phê', measure: '1 thìa cà phê' },
         ],
     },
     {
@@ -25,11 +25,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         videoUrl: "",
         imgUrl: 'https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?w=600',
         isFavorite: false,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Cà chua', quantity: 4, unit: 'quả' },
-            { name: 'Phô mai Mozzarella tươi', quantity: 200, unit: 'g' },
-            { name: 'Lá húng quế tươi', quantity: 1, unit: 'nắm' },
-            { name: 'Dầu ô liu nguyên chất', quantity: 2, unit: 'thìa canh' },
+            { name: 'Cà chua', quantity: 4, unit: 'quả', measure: '4 quả' },
+            { name: 'Phô mai Mozzarella tươi', quantity: 200, unit: 'g', measure: '200g' },
+            { name: 'Lá húng quế tươi', quantity: 1, unit: 'nắm', measure: '1 nắm' },
+            { name: 'Dầu ô liu nguyên chất', quantity: 2, unit: 'thìa canh', measure: '2 thìa canh' },
         ],
     },
     {
@@ -40,11 +41,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         videoUrl: "",
         imgUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800',
         isFavorite: true,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Đế bánh pizza', quantity: 1, unit: 'cái' },
-            { name: 'Sốt cà chua', quantity: 100, unit: 'g' },
-            { name: 'Phô mai Mozzarella', quantity: 150, unit: 'g' },
-            { name: 'Lá húng quế', quantity: 8, unit: 'lá' }
+            { name: 'Đế bánh pizza', quantity: 1, unit: 'cái', measure: '1 cái' },
+            { name: 'Sốt cà chua', quantity: 100, unit: 'g', measure: '100g' },
+            { name: 'Phô mai Mozzarella', quantity: 150, unit: 'g', measure: '150g' },
+            { name: 'Lá húng quế', quantity: 8, unit: 'lá', measure: '8 lá' }
         ]
     },
     {
@@ -55,11 +57,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         price: 99000,
         videoUrl: "",
         isFavorite: true,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Lá mì Lasagna', quantity: 8, unit: 'lá' },
-            { name: 'Thịt bò băm', quantity: 300, unit: 'g' },
-            { name: 'Phô mai Mozzarella', quantity: 200, unit: 'g' },
-            { name: 'Sốt cà chua', quantity: 250, unit: 'ml' }
+            { name: 'Lá mì Lasagna', quantity: 8, unit: 'lá', measure: '8 lá' },
+            { name: 'Thịt bò băm', quantity: 300, unit: 'g', measure: '300g' },
+            { name: 'Phô mai Mozzarella', quantity: 200, unit: 'g', measure: '200g' },
+            { name: 'Sốt cà chua', quantity: 250, unit: 'ml', measure: '250ml' }
         ]
     },
     {
@@ -70,11 +73,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         price: 250000,
         videoUrl: "",
         isFavorite: false,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Thăn bò', quantity: 250, unit: 'g' },
-            { name: 'Nấm', quantity: 100, unit: 'g' },
-            { name: 'Vỏ Puff Pastry', quantity: 1, unit: 'miếng' },
-            { name: 'Trứng gà', quantity: 1, unit: 'quả' }
+            { name: 'Thăn bò', quantity: 250, unit: 'g', measure: '250g' },
+            { name: 'Nấm', quantity: 100, unit: 'g', measure: '100g' },
+            { name: 'Vỏ Puff Pastry', quantity: 1, unit: 'miếng', measure: '1 miếng' },
+            { name: 'Trứng gà', quantity: 1, unit: 'quả', measure: '1 quả' }
         ]
     },
     {
@@ -85,11 +89,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         isFavorite: true,
         videoUrl: "",
         price: 85000,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Gạo Arborio', quantity: 200, unit: 'g' },
-            { name: 'Nấm', quantity: 150, unit: 'g' },
-            { name: 'Phô mai Parmesan', quantity: 60, unit: 'g' },
-            { name: 'Nước dùng gà', quantity: 500, unit: 'ml' }
+            { name: 'Gạo Arborio', quantity: 200, unit: 'g', measure: '200g' },
+            { name: 'Nấm', quantity: 150, unit: 'g', measure: '150g' },
+            { name: 'Phô mai Parmesan', quantity: 60, unit: 'g', measure: '60g' },
+            { name: 'Nước dùng gà', quantity: 500, unit: 'ml', measure: '500ml' }
         ]
     },
     {
@@ -100,11 +105,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         price: 100000,
         videoUrl: "",
         isFavorite: false,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Phi lê cá tuyết', quantity: 250, unit: 'g' },
-            { name: 'Khoai tây', quantity: 300, unit: 'g' },
-            { name: 'Bột mì', quantity: 100, unit: 'g' },
-            { name: 'Dầu ăn', quantity: 500, unit: 'ml' }
+            { name: 'Phi lê cá tuyết', quantity: 250, unit: 'g', measure: '250g' },
+            { name: 'Khoai tây', quantity: 300, unit: 'g', measure: '300g' },
+            { name: 'Bột mì', quantity: 100, unit: 'g', measure: '100g' },
+            { name: 'Dầu ăn', quantity: 500, unit: 'ml', measure: '500ml' }
         ]
     },
     {
@@ -115,11 +121,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         price: 55000,
         videoUrl: "",
         isFavorite: true,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Bột mì', quantity: 250, unit: 'g' },
-            { name: 'Bơ', quantity: 120, unit: 'g' },
-            { name: 'Men nở', quantity: 7, unit: 'g' },
-            { name: 'Sữa tươi', quantity: 150, unit: 'ml' }
+            { name: 'Bột mì', quantity: 250, unit: 'g', measure: '250g' },
+            { name: 'Bơ', quantity: 120, unit: 'g', measure: '120g' },
+            { name: 'Men nở', quantity: 7, unit: 'g', measure: '7g' },
+            { name: 'Sữa tươi', quantity: 150, unit: 'ml', measure: '150ml' }
         ]
     },
     {
@@ -130,11 +137,12 @@ export const MOCK_RECIPES: RecipeModel[] = [
         price: 100000000000000,
         videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&list=RDdQw4w9WgXcQ&start_radio=1",
         isFavorite: true,
+        authorEmail: "[EMAIL_ADDRESS]",
         ingredients: [
-            { name: 'Bột mì', quantity: 250, unit: 'g' },
-            { name: 'Bơ', quantity: 120, unit: 'g' },
-            { name: 'Men nở', quantity: 7, unit: 'g' },
-            { name: 'Sữa tươi', quantity: 150, unit: 'ml' }
+            { name: 'Bột mì', quantity: 250, unit: 'g', measure: '250g' },
+            { name: 'Bơ', quantity: 120, unit: 'g', measure: '120g' },
+            { name: 'Men nở', quantity: 7, unit: 'g', measure: '7g' },
+            { name: 'Sữa tươi', quantity: 150, unit: 'ml', measure: '150ml' }
         ]
     },
 ];

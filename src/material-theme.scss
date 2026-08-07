@@ -1,8 +1,8 @@
 @use '@angular/material' as mat;
 
 // Editorial dark theme in the spirit of cinematic-luxury automotive
-// marketing sites: near-black canvas, a single scarce red accent, sharp
-// corners, a serif brand face for display type over a plain sans for UI.
+// marketing sites: near-black canvas, a single scarce red accent, a
+// serif brand face for display type over a plain sans for UI.
 html {
   height: 100%;
 
@@ -20,15 +20,31 @@ html {
     ));
 
   // M3's dark-mode primary auto-lightens for contrast (a pale pink here) —
-  // pin the brand accent to a fixed racing red instead, and flatten the
-  // pill/rounded shapes M3 uses by default down to sharp editorial corners.
+  // pin the brand accent to a fixed racing red instead. Shape keeps M3's
+  // default rounded corners (pill buttons, rounded cards).
   --mat-sys-primary: #b3271d;
   --mat-sys-on-primary: #fdf6ee;
   --mat-sys-primary-container: #7d1b14;
   --mat-sys-on-primary-container: #ffdad4;
-  --mat-sys-corner-full: 0px;
-  --mat-sys-corner-large: 0px;
-  --mat-sys-corner-medium: 0px;
+
+  // M3 also tints its neutral surfaces with the primary hue by default.
+  // Pin them to a deliberately-chosen near-black/warm-ivory pair instead —
+  // cool-leaning ground, warm-leaning text — the low-contrast pairing that
+  // reads as "dark luxury" rather than plain #000-on-#fff-inverted.
+  --mat-sys-surface: #0a0a0c;
+  --mat-sys-on-surface: #f3efe8;
+  --mat-sys-surface-container: #151318;
+  --mat-sys-surface-container-high: #1f1c22;
+  --mat-sys-surface-container-highest: #26222a;
+  --mat-sys-on-surface-variant: #9c948b;
+  --mat-sys-outline: #6b6660;
+  --mat-sys-outline-variant: rgba(255, 255, 255, .09);
+
+  // Secondary accent reserved for "premium tier" cues (the premium price
+  // badge, the bulk-order discount) so those never compete visually with
+  // the primary red, which stays reserved for actions.
+  --gold-accent: #b6875a;
+  --on-gold-accent: #1a1108;
 }
 
 body {
@@ -39,4 +55,11 @@ body {
 
   margin: 0;
   height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
 }

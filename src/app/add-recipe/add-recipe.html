@@ -1,4 +1,4 @@
-<a mat-button routerLink="/recipes" class="back-link">
+<a mat-stroked-button routerLink="/recipes" class="back-link">
     <mat-icon>arrow_back</mat-icon>
     Quay lại danh sách
 </a>
@@ -7,7 +7,7 @@
 
     <mat-card-header>
 
-        <span class="eyebrow">Bộ sưu tập công thức</span>
+        <span class="eyebrow"></span>
 
         <mat-card-title>
             Thêm công thức mới
@@ -17,21 +17,16 @@
 
     <mat-card-content>
 
-        <form [formGroup]="recipeForm" (ngSubmit)="save()" class="recipe-form">
+        <form novalidate (submit)="save($event)" class="recipe-form">
 
             <mat-form-field appearance="outline">
 
                 <mat-label>Tên món</mat-label>
 
-                <input matInput type="text" formControlName="name">
-
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-
-                <mat-label>Giá</mat-label>
-
-                <input matInput type="number" formControlName="price">
+                <input matInput type="text" [formField]="recipeForm.name">
+                @for (error of recipeForm.name().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
 
             </mat-form-field>
 
@@ -39,39 +34,34 @@
 
                 <mat-label>Mô tả</mat-label>
 
-                <textarea matInput rows="4" formControlName="description">
-                </textarea>
+                <input matInput type="text" [formField]="recipeForm.description">
+                @for (error of recipeForm.description().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
 
             </mat-form-field>
 
             <mat-form-field appearance="outline">
 
-                <mat-label>Nguyên liệu</mat-label>
+                <mat-label>Email tác giả</mat-label>
 
-                <textarea matInput rows="3" formControlName="ingredients">
-                </textarea>
+                <input matInput type="email" [formField]="recipeForm.authorEmail">
 
-            </mat-form-field>
 
-            <mat-form-field appearance="outline">
-
-                <mat-label>Hình ảnh</mat-label>
-
-                <input matInput formControlName="imgUrl">
-
-                <mat-hint>
-                    Không bắt buộc
-                </mat-hint>
+                @for (error of recipeForm.authorEmail().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
 
             </mat-form-field>
 
-            <button mat-filled-button type="submit">
+            <button matButton="filled" type="submit" [disabled]="recipeForm().submitting()">
 
                 <mat-icon>save</mat-icon>
 
                 Lưu công thức
 
             </button>
+
 
         </form>
 

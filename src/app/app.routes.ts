@@ -1,11 +1,8 @@
 import { Routes } from '@angular/router';
-import { RecipeList } from './recipe-list/recipe-list';
-import { RecipeDetail } from './recipe-detail/recipe-detail';
-import { AddRecipe } from './add-recipe/add-recipe';
 
 export const routes: Routes = [
-    { path: 'recipes', component: RecipeList },
-    { path: 'recipes/new', component: AddRecipe },
-    { path: 'recipes/:id', component: RecipeDetail },
+    { path: 'recipes', loadComponent: () => import('./recipe-list/recipe-list').then((m) => m.RecipeList) },
+    { path: 'recipes/new', loadComponent: () => import('./add-recipe/add-recipe').then((m) => m.AddRecipe) },
+    { path: 'recipes/:id', loadComponent: () => import('./recipe-detail/recipe-detail').then((m) => m.RecipeDetail) },
     { path: '', redirectTo: 'recipes', pathMatch: 'full' },
 ];

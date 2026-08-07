@@ -1,4 +1,4 @@
-<a mat-button routerLink="/recipes">
+<a mat-stroked-button routerLink="/recipes" class="back-link">
     <mat-icon>arrow_back</mat-icon>
     Quay lại danh sách
 </a>
@@ -85,6 +85,8 @@
 
                 <mat-list>
 
+                    @defer (on viewport) {
+
                     @for (
                     ingredient of adjustedIngredients();
                     track ingredient.name;
@@ -114,6 +116,14 @@
 
                         Không có nguyên liệu.
 
+                    </mat-list-item>
+
+                    }
+
+                    } @placeholder {
+
+                    <mat-list-item>
+                        Đang tải nguyên liệu...
                     </mat-list-item>
 
                     }
