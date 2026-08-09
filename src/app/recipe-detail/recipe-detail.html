@@ -1,13 +1,40 @@
-<a mat-stroked-button routerLink="/recipes" class="back-link">
-    <mat-icon>arrow_back</mat-icon>
-    Quay lại danh sách
-</a>
+<div class="detail-toolbar">
+
+    <a mat-stroked-button routerLink="/recipes" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Quay lại danh sách
+    </a>
+
+    @if (localRecipe(); as recipe) {
+    <div class="detail-actions">
+
+        <a mat-stroked-button class="edit-link" [routerLink]="['/recipes', recipe.id, 'edit']">
+            <mat-icon>edit</mat-icon>
+            Sửa
+        </a>
+
+        <button mat-stroked-button type="button" class="delete-btn" (click)="deleteRecipe()">
+            <mat-icon>delete</mat-icon>
+            Xoá
+        </button>
+
+    </div>
+    }
+
+</div>
 
 @if (selectedRecipe(); as recipe) {
 
 <mat-card class="recipe-card">
 
+    @if (recipe.imgUrl) {
     <img mat-card-image [src]="recipe.imgUrl" [alt]="'Ảnh của ' + recipe.name">
+    } @else {
+    <div class="recipe-image-placeholder">
+        <mat-icon>image</mat-icon>
+        <span>Chưa có ảnh</span>
+    </div>
+    }
 
     <mat-card-header>
 

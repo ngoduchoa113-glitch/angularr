@@ -1,40 +1,49 @@
-<div class="top-actions">
+<div class="search-group">
 
-    <a mat-flat-button class="add-button" routerLink="/recipes/new">
+    <mat-form-field appearance="outline">
 
-        <mat-icon>add</mat-icon>
+        <mat-label>Tìm món ăn</mat-label>
 
-        Thêm công thức
+        <input #searchInput matInput type="search" [ngModel]="store.keyword()"
+            (ngModelChange)="store.setKeyword($event)">
 
-    </a>
+        @if (store.keyword()) {
+        <button matSuffix mat-icon-button type="button" aria-label="Xoá tìm kiếm"
+            (click)="store.setKeyword(''); searchInput.focus()">
+            <mat-icon>close</mat-icon>
+        </button>
+        } @else {
+        <mat-icon matSuffix>
+            search
+        </mat-icon>
+        }
 
-    <div class="search-group">
-
-        <mat-form-field appearance="outline">
-
-            <mat-label>Tìm món ăn</mat-label>
-
-            <input matInput type="search" [ngModel]="store.keyword()"
-                (ngModelChange)="store.setKeyword($event)">
-
-            <mat-icon matSuffix>
-                search
-            </mat-icon>
-
-        </mat-form-field>
-
-    </div>
+    </mat-form-field>
 
 </div>
 
 <div class="sort-buttons">
 
-    <button mat-stroked-button (click)="setSort('asc')">
+    <button mat-stroked-button [class.active]="sortType() === 'price-asc'" (click)="setSort('price-asc')">
         ↑ Giá tăng
     </button>
 
-    <button mat-stroked-button (click)="setSort('desc')">
+    <button mat-stroked-button [class.active]="sortType() === 'price-desc'" (click)="setSort('price-desc')">
         ↓ Giá giảm
+    </button>
+
+    <button mat-stroked-button [class.active]="sortType() === 'name-asc'" (click)="setSort('name-asc')">
+        A→Z
+    </button>
+
+    <button mat-stroked-button [class.active]="sortType() === 'name-desc'" (click)="setSort('name-desc')">
+        Z→A
+    </button>
+
+    <button mat-stroked-button class="favorites-toggle" [class.active]="showFavoritesOnly()"
+        (click)="toggleFavoritesOnly()">
+        <mat-icon>{{ showFavoritesOnly() ? 'star' : 'star_border' }}</mat-icon>
+        Yêu thích
     </button>
 
 </div>
@@ -47,88 +56,120 @@
 
 }
 
-<mat-nav-list class="recipe-list">
+<div class="recipe-grid">
 
     @for (recipe of sortedRecipes(); track recipe.id) {
 
     @if (recipe.videoUrl) {
 
-    <a mat-list-item [href]="recipe.videoUrl" target="_blank">
+    <a class="recipe-card" [href]="recipe.videoUrl" target="_blank">
 
-        <span matListItemTitle>
-
-            {{ recipe.name }}
-
-            @if (recipe.id === recipeDatNhat().id) {
-            💎
-            }
-
-        </span>
-
-        <button mat-icon-button matListItemMeta [class.is-favorite]="recipe.isFavorite"
-            (click)="toggleFavorite(recipe, $event)">
-
-            <mat-icon>
-                {{ recipe.isFavorite ? 'star' : 'star_border' }}
-            </mat-icon>
-
-        </button>
-
-    </a>
-
-    } @else {
-
-    <a mat-list-item [routerLink]="['/recipes', recipe.id]">
-
-        <span matListItemTitle>
-
-            {{ recipe.name }}
-
-            @if (recipe.id === recipeDatNhat().id) {
-            💎
-            }
-
-        </span>
-
-        <button mat-icon-button matListItemMeta [class.is-favorite]="recipe.isFavorite"
-            (click)="toggleFavorite(recipe, $event)">
-
-            <mat-icon>
-                {{ recipe.isFavorite ? 'star' : 'star_border' }}
-            </mat-icon>
-
-        </button>
-
-    </a>
-
-    }
-
-    }
-
-
-    @let meals = store.meals;
-    @if(meals.isLoading()) {
-    <mat-spinner diameter="50" aria-label="polite"></mat-spinner>
-    }
-    @else if(meals.error()) {
-    <p>LỖI RỒI NGHỈ MẸ ĐI CON</p>
-    <button matButton="filled" type="button" (click)="meals.reload()">
-        <mat-icon>refresh</mat-icon>
-        thử lại
-    </button>
-
-    } @else {
-    <mat-nav-list>
-        @for (recipe of store.apiRecipes(); track recipe.id) {
-        <a mat-list-item [routerLink]="['/recipes', recipe.id]">
-            <img matListItemAvatar [src]="recipe.imgUrl" alt="" />
-            <span matListItemTitle>{{recipe.name}}</span>
-            <span matListItemLine>{{ recipe.description}}</span>
-            <span matListItemLine>{{recipe.ingredients.length}}</span>
-        </a>
-        } @empty {
-        <li>không có món nào từ máy chủ</li>
+        @if (recipe.imgUrl) {
+        <img class="recipe-card-image" [src]="recipe.imgUrl" [alt]="recipe.name">
+        } @else {
+        <div class="recipe-card-image recipe-card-image-placeholder">
+            <mat-icon>image</mat-icon>
+        </div>
         }
-    </mat-nav-list>
+
+        <div class="recipe-card-body">
+
+            <span class="recipe-card-title">
+                {{ recipe.name }}
+                @if (recipe.id === recipeDatNhat().id) { 💎 }
+            </span>
+
+            <span class="recipe-card-price">{{ recipe.price | number }} đ</span>
+
+        </div>
+
+        <button mat-icon-button class="recipe-card-fav" [class.is-favorite]="recipe.isFavorite"
+            (click)="toggleFavorite(recipe, $event)">
+
+            <mat-icon>
+                {{ recipe.isFavorite ? 'star' : 'star_border' }}
+            </mat-icon>
+
+        </button>
+
+    </a>
+
+    } @else {
+
+    <a class="recipe-card" [routerLink]="['/recipes', recipe.id]">
+
+        @if (recipe.imgUrl) {
+        <img class="recipe-card-image" [src]="recipe.imgUrl" [alt]="recipe.name">
+        } @else {
+        <div class="recipe-card-image recipe-card-image-placeholder">
+            <mat-icon>image</mat-icon>
+        </div>
+        }
+
+        <div class="recipe-card-body">
+
+            <span class="recipe-card-title">
+                {{ recipe.name }}
+                @if (recipe.id === recipeDatNhat().id) { 💎 }
+            </span>
+
+            <span class="recipe-card-price">{{ recipe.price | number }} đ</span>
+
+        </div>
+
+        <button mat-icon-button class="recipe-card-fav" [class.is-favorite]="recipe.isFavorite"
+            (click)="toggleFavorite(recipe, $event)">
+
+            <mat-icon>
+                {{ recipe.isFavorite ? 'star' : 'star_border' }}
+            </mat-icon>
+
+        </button>
+
+    </a>
+
     }
-</mat-nav-list>
+
+    } @empty {
+
+    <p class="empty-state">
+        {{ showFavoritesOnly() ? 'Chưa có món yêu thích nào.' : 'Không tìm thấy món nào.' }}
+    </p>
+
+    }
+
+</div>
+
+<mat-divider class="section-divider"></mat-divider>
+
+@let meals = store.meals;
+@if(meals.isLoading()) {
+<mat-spinner diameter="50" aria-label="polite"></mat-spinner>
+}
+@else if(meals.error()) {
+<p>LỖI RỒI NGHỈ MẸ ĐI CON</p>
+<button matButton="filled" type="button" (click)="meals.reload()">
+    <mat-icon>refresh</mat-icon>
+    thử lại
+</button>
+
+} @else {
+
+<div class="recipe-grid">
+    @for (recipe of store.apiRecipes(); track recipe.id) {
+    <a class="recipe-card" [routerLink]="['/recipes', recipe.id]">
+
+        <img class="recipe-card-image" [src]="recipe.imgUrl" alt="">
+
+        <div class="recipe-card-body">
+            <span class="recipe-card-title">{{ recipe.name }}</span>
+            <span class="recipe-card-price">{{ recipe.price | number }} đ</span>
+        </div>
+
+    </a>
+    } @empty {
+    <p class="empty-state">không có món nào từ máy chủ</p>
+    }
+</div>
+
+}

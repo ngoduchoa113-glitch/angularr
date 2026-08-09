@@ -1,12 +1,18 @@
-mat-toolbar {
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* ====================== Top app bar ====================== */
+
+.app-toolbar {
 
     display: flex;
 
-    justify-content: center;
-
     align-items: center;
 
-    gap: 14px;
+    gap: 16px;
 
     height: 100px;
 
@@ -15,22 +21,42 @@ mat-toolbar {
     border-bottom: 1px solid var(--mat-sys-outline-variant);
 
     box-shadow: none;
+
+    flex: 0 0 auto;
+
+    z-index: 10;
+}
+
+.app-logo-link {
+
+    display: inline-flex;
+
+    border-radius: 50%;
+
+    transition: transform .18s ease;
+}
+
+.app-logo-link:hover {
+
+    transform: scale(1.06);
 }
 
 .app-logo {
 
-    width: 50px;
+    width: 48px;
 
-    height: 50px;
+    height: 48px;
 
-    object-fit: contain;
+    border-radius: 50%;
+
+    object-fit: cover;
 }
 
 .app-title {
 
     font-family: 'Lato', sans-serif;
 
-    font-size: 25px;
+    font-size: 24px;
 
     font-weight: 700;
 
@@ -39,4 +65,64 @@ mat-toolbar {
     text-transform: uppercase;
 
     color: var(--mat-sys-on-surface);
+}
+
+.app-toolbar-spacer {
+
+    flex: 1 1 auto;
+}
+
+.theme-toggle {
+
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* ====================== Body: drawer + content ====================== */
+
+.app-body {
+
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    background: var(--mat-sys-surface);
+}
+
+.app-drawer {
+
+    width: 280px;
+
+    background: var(--mat-sys-surface-container-high);
+
+    border-right: 1px solid var(--mat-sys-outline-variant);
+}
+
+.app-drawer mat-nav-list {
+
+    padding-top: 8px;
+}
+
+.app-drawer a[mat-list-item].active-link {
+
+    background: var(--mat-sys-surface-container-highest);
+
+    color: var(--mat-sys-primary);
+}
+
+.app-content {
+
+    padding: 24px;
+}
+
+/* ====================== FAB ====================== */
+
+.app-fab {
+
+    position: fixed;
+
+    right: 24px;
+
+    bottom: 24px;
+
+    z-index: 5;
 }

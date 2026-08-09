@@ -7,7 +7,7 @@ import {
 
 import { DecimalPipe } from '@angular/common';
 import { httpResource } from '@angular/common/http';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { toRecipeModel } from '../recipe-mapper';
 import { RecipeStore } from '../stores/recipe-store';
@@ -17,7 +17,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -28,6 +31,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class RecipeDetail {
 
   private sanitizer = inject(DomSanitizer);
+
+  private readonly router = inject(Router);
+
+  private readonly dialog = inject(MatDialog);
+
+  private readonly snackBar = inject(MatSnackBar);
 
   protected readonly youtubeUrl = computed((): SafeResourceUrl => {
 
@@ -140,6 +149,34 @@ export class RecipeDetail {
     }
 
     this.soPhanAn.update(n => n - 1);
+
+  }
+
+  protected deleteRecipe(): void {
+
+    const recipe = this.localRecipe();
+
+    if (!recipe) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      data: {
+        title: 'Xoá công thức?',
+        message: `Bạn có chắc muốn xoá "${recipe.name}"? Hành động này không thể hoàn tác.`,
+        confirmText: 'Xoá',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.store.deleteRecipe(recipe.id);
+      this.router.navigate(['/recipes']);
+      this.snackBar.open('Đã xoá công thức', 'Đóng', { duration: 3000 });
+    });
 
   }
 

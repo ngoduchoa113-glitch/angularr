@@ -6,20 +6,18 @@
 
     display: flex;
 
-    justify-content: center;
+    flex-direction: column;
 
-    position: relative;
+    align-items: center;
 
     padding: 64px 24px 96px;
 }
 
 .back-link {
 
-    position: absolute;
+    align-self: flex-start;
 
-    top: 24px;
-
-    left: 24px;
+    margin-bottom: 32px;
 
     display: inline-flex;
 
@@ -27,20 +25,48 @@
 
     gap: 8px;
 
-    color: var(--mat-sys-on-surface-variant) !important;
-
     font-size: 13px;
 
-    font-weight: 600;
+    font-weight: 700;
 
     letter-spacing: 0.06em;
 
     text-transform: uppercase;
+
+    background: var(--mat-sys-surface-container-high);
+
+    border-color: var(--mat-sys-outline);
+}
+
+.back-link:hover {
+
+    background: var(--mat-sys-surface-container-highest);
+
+    border-color: var(--mat-sys-primary);
+}
+
+.add-recipe-layout {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: flex-start;
+
+    justify-content: center;
+
+    gap: 32px;
+
+    width: 100%;
+
+    max-width: 1200px;
 }
 
 .form-card {
 
-    width: min(680px, 100%);
+    flex: 1 1 420px;
+
+    max-width: 600px;
 
     border-radius: 20px !important;
 
@@ -51,6 +77,140 @@
     padding: 48px;
 
     box-shadow: none !important;
+}
+
+/* ===== Khung xem trước ===== */
+
+.preview-card {
+
+    flex: 1 1 320px;
+
+    max-width: 380px;
+
+    position: sticky;
+
+    top: 24px;
+
+    border-radius: 20px !important;
+
+    border: 1px solid var(--mat-sys-outline-variant);
+
+    background: var(--mat-sys-surface-container) !important;
+
+    box-shadow: none !important;
+
+    overflow: hidden;
+}
+
+.preview-eyebrow {
+
+    padding: 20px 24px 0;
+}
+
+.preview-card img[mat-card-image] {
+
+    aspect-ratio: 16 / 9;
+
+    object-fit: cover;
+
+    margin: 16px 0 0;
+}
+
+.preview-image-placeholder {
+
+    aspect-ratio: 16 / 9;
+
+    margin: 16px 0 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    background: var(--mat-sys-surface-container-high);
+
+    border-top: 1px dashed var(--mat-sys-outline-variant);
+
+    border-bottom: 1px dashed var(--mat-sys-outline-variant);
+
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.preview-image-placeholder mat-icon {
+
+    opacity: .6;
+}
+
+.preview-image-placeholder span {
+
+    font-size: 12px;
+
+    letter-spacing: 0.04em;
+
+    text-transform: uppercase;
+}
+
+.preview-card .price-tag {
+
+    display: inline-block;
+
+    padding: 6px 14px;
+
+    border-radius: 9999px;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.preview-card .budget {
+    background: var(--tier-budget);
+    color: var(--on-tier-budget);
+}
+
+.preview-card .standard {
+    background: var(--tier-standard);
+    color: var(--on-tier-standard);
+}
+
+.preview-card .premium {
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+}
+
+.preview-card .preview-price {
+
+    margin: 12px 0;
+}
+
+.preview-card mat-divider {
+
+    margin: 20px 0;
+}
+
+.preview-card h3 {
+
+    margin: 0 0 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+@media (max-width: 900px) {
+
+    .preview-card {
+
+        position: static;
+    }
 }
 
 .eyebrow {
@@ -68,6 +228,13 @@
     text-transform: uppercase;
 
     margin-bottom: 8px;
+}
+
+.price-suffix {
+
+    margin-left: 6px;
+
+    color: var(--mat-sys-on-surface-variant);
 }
 
 mat-card-title {
@@ -113,6 +280,107 @@ mat-hint {
 mat-form-field {
 
     width: 100%;
+}
+
+/* ===== Nguyên liệu ===== */
+
+.ingredients-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.ingredients-label {
+
+    display: block;
+
+    color: var(--mat-sys-on-surface-variant);
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+
+    font-size: 0.72em;
+
+    font-weight: 600;
+}
+
+.ingredient-row {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+}
+
+.ingredient-name {
+
+    flex: 2;
+}
+
+.ingredient-quantity {
+
+    flex: 1;
+}
+
+.ingredient-unit {
+
+    flex: 1;
+}
+
+.remove-ingredient {
+
+    margin-top: 4px;
+
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.remove-ingredient:not(:disabled):hover {
+
+    color: var(--mat-sys-error);
+}
+
+.ingredients-error {
+
+    margin: 0;
+
+    font-size: 12px;
+
+    color: var(--mat-sys-error);
+}
+
+.add-ingredient {
+
+    align-self: flex-start;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+
+    font-size: 13px;
+
+    background: var(--mat-sys-surface-container-high);
+
+    border-color: var(--mat-sys-outline);
+}
+
+.add-ingredient:hover {
+
+    background: var(--mat-sys-surface-container-highest);
+
+    border-color: var(--mat-sys-primary);
 }
 
 button[mat-flat-button] {

@@ -1,23 +1,57 @@
 @use '@angular/material' as mat;
 
-// Editorial dark theme in the spirit of cinematic-luxury automotive
-// marketing sites: near-black canvas, a single scarce red accent, a
-// serif brand face for display type over a plain sans for UI.
+// Editorial theme in the spirit of cinematic-luxury automotive marketing
+// sites: a near-black (or warm-ivory, in light mode) canvas, a single
+// scarce red accent, a serif brand face for display type over a plain
+// sans for UI. Dark is the default; light is opt-in via [data-theme="light"]
+// on <html> (see ThemeStore).
+$typography: (plain-family: 'Lato, sans-serif',
+    brand-family: 'Cormorant Garamond, serif',
+    bold-weight: 700,
+    medium-weight: 700,
+    regular-weight: 400,
+  );
+
 html {
   height: 100%;
 
+  // mat.theme() must run once per theme-type: calling it again under
+  // [data-theme="light"] regenerates *every* M3 token (error, surface-
+  // container-low, elevation, corner radii, ...) for that scheme — not just
+  // the handful we hand-pick below. Without this second call, anything we
+  // don't explicitly override (e.g. --mat-sys-error) would stay pinned to
+  // dark-mode values even while data-theme="light" is active.
   @include mat.theme((color: (primary: mat.$red-palette,
         tertiary: mat.$red-palette,
         theme-type: dark,
       ),
-      typography: (plain-family: 'Lato, sans-serif',
-        brand-family: 'Cormorant Garamond, serif',
-        bold-weight: 700,
-        medium-weight: 700,
-        regular-weight: 400,
-      ),
+      typography: $typography,
       density: 0,
     ));
+
+  // Brand accents that read the same regardless of surface — they're
+  // self-contained chips/badges, not page backgrounds, so both themes share
+  // one definition.
+  --gold-accent: #b6875a;
+  --on-gold-accent: #1a1108;
+
+  // Price-tier badges (recipe detail + add-recipe preview): green/yellow/red
+  // reads as a familiar cheap-to-expensive scale at a glance, in both themes.
+  --tier-budget: #3c8a5a;
+  --on-tier-budget: #eafbee;
+  --tier-standard: #cf9d1d;
+  --on-tier-standard: #241c02;
+
+  // Form fields default their focus outline/label to --mat-sys-primary, which
+  // is red here — reads as a validation error rather than "focused". Use the
+  // gold accent instead so a focused field never looks like an invalid one.
+  --mat-form-field-outlined-focus-outline-color: var(--gold-accent);
+  --mat-form-field-outlined-focus-label-text-color: var(--gold-accent);
+  --mat-form-field-outlined-caret-color: var(--gold-accent);
+  --mat-form-field-focus-select-arrow-color: var(--gold-accent);
+
+  // ===== Dark theme (default — applies until [data-theme="light"] is set) =====
+  color-scheme: dark;
 
   // M3's dark-mode primary auto-lightens for contrast (a pale pink here) —
   // pin the brand accent to a fixed racing red instead. Shape keeps M3's
@@ -33,22 +67,47 @@ html {
   // reads as "dark luxury" rather than plain #000-on-#fff-inverted.
   --mat-sys-surface: #0a0a0c;
   --mat-sys-on-surface: #f3efe8;
+  --mat-sys-surface-container-low: #101014;
   --mat-sys-surface-container: #151318;
   --mat-sys-surface-container-high: #1f1c22;
   --mat-sys-surface-container-highest: #26222a;
   --mat-sys-on-surface-variant: #9c948b;
   --mat-sys-outline: #6b6660;
   --mat-sys-outline-variant: rgba(255, 255, 255, .09);
+}
 
-  // Secondary accent reserved for "premium tier" cues (the premium price
-  // badge, the bulk-order discount) so those never compete visually with
-  // the primary red, which stays reserved for actions.
-  --gold-accent: #b6875a;
-  --on-gold-accent: #1a1108;
+// ===== Light theme (opt-in) =====
+// Same structure as dark, inverted to a warm-ivory canvas with near-black
+// text — kept as a higher-specificity override so it wins over the base
+// `html` rule above without needing `!important`.
+html[data-theme='light'] {
+  @include mat.theme((color: (primary: mat.$red-palette,
+        tertiary: mat.$red-palette,
+        theme-type: light,
+      ),
+      typography: $typography,
+      density: 0,
+    ));
+
+  color-scheme: light;
+
+  --mat-sys-primary: #b3271d;
+  --mat-sys-on-primary: #fdf6ee;
+  --mat-sys-primary-container: #ffdad4;
+  --mat-sys-on-primary-container: #7d1b14;
+
+  --mat-sys-surface: #faf7f2;
+  --mat-sys-on-surface: #1c1a17;
+  --mat-sys-surface-container-low: #f6f1e9;
+  --mat-sys-surface-container: #f2ede4;
+  --mat-sys-surface-container-high: #e8e1d5;
+  --mat-sys-surface-container-highest: #ded4c3;
+  --mat-sys-on-surface-variant: #6b6259;
+  --mat-sys-outline: #8a8175;
+  --mat-sys-outline-variant: rgba(0, 0, 0, .09);
 }
 
 body {
-  color-scheme: dark;
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);

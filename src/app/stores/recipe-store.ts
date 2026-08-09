@@ -75,6 +75,20 @@ export const RecipeStore = signalStore(
             patchState(store, (state) => ({ recipes: [...state.recipes, newRecipe] }));
         },
 
+        updateRecipe(id: number, updates: Omit<RecipeModel, 'id' | 'isFavorite'>): void {
+            patchState(store, (state) => ({
+                recipes: state.recipes.map((recipe) =>
+                    recipe.id === id ? { ...recipe, ...updates } : recipe
+                ),
+            }));
+        },
+
+        deleteRecipe(id: number): void {
+            patchState(store, (state) => ({
+                recipes: state.recipes.filter((recipe) => recipe.id !== id),
+            }));
+        },
+
         getRecipeById(id: number): RecipeModel | undefined {
             return store.recipes().find((recipe) => recipe.id === id);
         },
