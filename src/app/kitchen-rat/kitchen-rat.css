@@ -1,0 +1,55 @@
+:host {
+    position: fixed;
+    inset: 0;
+    /* Giữa đèn nến (400) và mèo linh vật (500) — dưới CDK overlay (1000+). */
+    z-index: 450;
+    pointer-events: none;
+}
+
+.kitchen-rat {
+    position: absolute;
+    transform: translate(-50%, -50%) scaleX(-1);
+    transform-origin: center;
+
+    font-size: 32px;
+    line-height: 1;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .5));
+
+    /* "Chạy" mượt giữa các vị trí (đổi mỗi 1.5s bằng JS) + lắc nhẹ liên tục cho cảm
+       giác đang chạy thay vì đứng yên. */
+    transition: left 1.3s ease-in-out, top 1.3s ease-in-out;
+    animation: ratWiggle .5s ease-in-out infinite;
+}
+
+.kitchen-rat:hover {
+    transform: translate(-50%, -50%) scaleX(-1) scale(1.15);
+}
+
+.kitchen-rat:disabled {
+    cursor: default;
+}
+
+@keyframes ratWiggle {
+
+    0%,
+    100% {
+        rotate: 0deg;
+    }
+
+    50% {
+        rotate: -8deg;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kitchen-rat {
+        animation: none;
+        transition: none;
+    }
+}

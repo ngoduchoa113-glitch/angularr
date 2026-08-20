@@ -1,0 +1,115 @@
+<div class="profile-layout">
+
+    <mat-card class="section-card">
+        <mat-card-header>
+            <mat-card-title>Hồ sơ</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+            <div class="avatar-row">
+                <div class="avatar-preview">
+                    @if (profileModel().avatarUrl) {
+                    <img [src]="profileModel().avatarUrl" alt="Avatar">
+                    } @else {
+                    <mat-icon class="avatar-placeholder">person</mat-icon>
+                    }
+                </div>
+                <label mat-stroked-button class="upload-button" [class.disabled]="uploadingAvatar()">
+                    @if (uploadingAvatar()) {
+                    <mat-spinner diameter="16" />
+                    Đang tải ảnh...
+                    } @else {
+                    <mat-icon>upload</mat-icon>
+                    Đổi ảnh đại diện
+                    }
+                    <input type="file" accept="image/*" hidden [disabled]="uploadingAvatar()" (change)="onAvatarSelected($event)">
+                </label>
+            </div>
+
+            <form novalidate (submit)="saveProfile($event)" class="profile-form">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Họ tên</mat-label>
+                    <input matInput [formField]="profileForm.name">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Email hiện tại</mat-label>
+                    <input matInput [value]="currentUser()?.email" disabled>
+                </mat-form-field>
+
+                <button mat-flat-button type="submit" [disabled]="savingProfile()">
+                    <mat-icon>save</mat-icon>
+                    Lưu thông tin
+                </button>
+            </form>
+
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="section-card">
+        <mat-card-header>
+            <mat-card-title>Đổi mật khẩu</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+            <form novalidate (submit)="changePassword($event)" class="profile-form">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Mật khẩu hiện tại</mat-label>
+                    <input matInput type="password" [formField]="passwordForm.currentPassword">
+                    @for (error of passwordForm.currentPassword().errors(); track error) {
+                    <mat-error>{{ error.message }}</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Mật khẩu mới</mat-label>
+                    <input matInput type="password" [formField]="passwordForm.newPassword">
+                    <mat-hint>Tối thiểu 8 ký tự, có chữ hoa, số và ký tự đặc biệt</mat-hint>
+                    @for (error of passwordForm.newPassword().errors(); track error) {
+                    <mat-error>{{ error.message }}</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Nhập lại mật khẩu mới</mat-label>
+                    <input matInput type="password" [formField]="passwordForm.confirmNewPassword">
+                    @for (error of passwordForm.confirmNewPassword().errors(); track error) {
+                    <mat-error>{{ error.message }}</mat-error>
+                    }
+                </mat-form-field>
+
+                <button mat-flat-button type="submit" [disabled]="changingPassword()">
+                    <mat-icon>lock_reset</mat-icon>
+                    Đổi mật khẩu
+                </button>
+            </form>
+
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="section-card danger-card">
+        <mat-card-header>
+            <mat-card-title>Xoá tài khoản</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+            <p class="danger-warning">Hành động này xoá vĩnh viễn tài khoản và không thể hoàn tác.</p>
+
+            <div class="delete-row">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-label>Nhập mật khẩu để xác nhận</mat-label>
+                    <input matInput type="password" [value]="deletePassword()"
+                        (input)="deletePassword.set($any($event.target).value)">
+                </mat-form-field>
+
+                <button mat-flat-button color="warn" type="button" [disabled]="deletingAccount()"
+                    (click)="confirmDeleteAccount()">
+                    <mat-icon>delete_forever</mat-icon>
+                    Xoá tài khoản
+                </button>
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+
+</div>

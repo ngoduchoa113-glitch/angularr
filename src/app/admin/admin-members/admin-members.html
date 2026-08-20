@@ -1,0 +1,83 @@
+<div class="members-layout">
+
+    <h1 class="page-title">Quản trị viên</h1>
+
+    <mat-card class="section-card">
+        <h2 class="section-title">Danh sách quản trị viên</h2>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+            <mat-label>Tìm admin theo email</mat-label>
+            <input matInput type="search" [ngModel]="adminKeyword()" (ngModelChange)="adminKeyword.set($event)">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        @if (adminsResource.isLoading()) {
+        <div class="loading-row">
+            <mat-spinner diameter="24" aria-label="Đang tải" />
+        </div>
+        } @else if (adminsResource.value().length === 0) {
+        <p class="empty-state">Không tìm thấy quản trị viên nào.</p>
+        } @else {
+        <div class="member-list">
+            @for (admin of adminsResource.value(); track admin.id) {
+            <div class="member-row">
+                <div class="member-info">
+                    <span class="member-email">{{ admin.email }}</span>
+                    @if (admin.id === currentUserId()) {
+                    <span class="you-badge">Bạn</span>
+                    }
+                    @if (admin.name) {
+                    <span class="member-name">{{ admin.name }}</span>
+                    }
+                </div>
+                <button mat-stroked-button type="button" class="revoke-btn" [disabled]="revokingId() === admin.id"
+                    (click)="confirmRevoke(admin)">
+                    <mat-icon>remove_moderator</mat-icon>
+                    Thu hồi quyền
+                </button>
+            </div>
+            }
+        </div>
+        }
+    </mat-card>
+
+    <mat-card class="section-card">
+        <h2 class="section-title">Cấp quyền admin</h2>
+        <p class="section-hint">Tìm một user theo email để cấp quyền quản trị.</p>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+            <mat-label>Tìm user theo email</mat-label>
+            <input matInput type="search" [ngModel]="candidateKeyword()" (ngModelChange)="candidateKeyword.set($event)">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        @if (candidateKeyword().trim().length < 2) {
+        <p class="empty-state">Nhập ít nhất 2 ký tự để tìm kiếm.</p>
+        } @else if (candidatesResource.isLoading()) {
+        <div class="loading-row">
+            <mat-spinner diameter="24" aria-label="Đang tải" />
+        </div>
+        } @else if (candidatesResource.value().length === 0) {
+        <p class="empty-state">Không tìm thấy user nào.</p>
+        } @else {
+        <div class="member-list">
+            @for (candidate of candidatesResource.value(); track candidate.id) {
+            <div class="member-row">
+                <div class="member-info">
+                    <span class="member-email">{{ candidate.email }}</span>
+                    @if (candidate.name) {
+                    <span class="member-name">{{ candidate.name }}</span>
+                    }
+                </div>
+                <button mat-flat-button type="button" [disabled]="grantingId() === candidate.id"
+                    (click)="grantAdmin(candidate)">
+                    <mat-icon>add_moderator</mat-icon>
+                    Cấp quyền admin
+                </button>
+            </div>
+            }
+        </div>
+        }
+    </mat-card>
+
+</div>

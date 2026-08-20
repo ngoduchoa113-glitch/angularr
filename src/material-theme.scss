@@ -1,26 +1,22 @@
 @use '@angular/material' as mat;
 
-// Editorial theme in the spirit of cinematic-luxury automotive marketing
-// sites: a near-black (or warm-ivory, in light mode) canvas, a single
-// scarce red accent, a serif brand face for display type over a plain
-// sans for UI. Dark is the default; light is opt-in via [data-theme="light"]
-// on <html> (see ThemeStore).
-$typography: (plain-family: 'Lato, sans-serif',
+// Theme "Claude editorial", chỉ còn bản tối — canvas nâu-đen ấm + coral làm
+// accent chính + serif display (Cormorant Garamond — bản mã nguồn mở thay
+// cho Copernicus/Tiempos Headline độc quyền) kết hợp sans-serif UI (Inter —
+// bản thay cho StyreneB). Theo file thiết kế DESIGN-claude.md.
+//
+// Không còn tính năng đổi theme — đây là theme duy nhất của app, không có
+// [data-theme] nào khác cần quan tâm.
+$typography: (plain-family: 'Inter, sans-serif',
     brand-family: 'Cormorant Garamond, serif',
-    bold-weight: 700,
-    medium-weight: 700,
+    bold-weight: 500,
+    medium-weight: 500,
     regular-weight: 400,
   );
 
 html {
   height: 100%;
 
-  // mat.theme() must run once per theme-type: calling it again under
-  // [data-theme="light"] regenerates *every* M3 token (error, surface-
-  // container-low, elevation, corner radii, ...) for that scheme — not just
-  // the handful we hand-pick below. Without this second call, anything we
-  // don't explicitly override (e.g. --mat-sys-error) would stay pinned to
-  // dark-mode values even while data-theme="light" is active.
   @include mat.theme((color: (primary: mat.$red-palette,
         tertiary: mat.$red-palette,
         theme-type: dark,
@@ -29,82 +25,74 @@ html {
       density: 0,
     ));
 
-  // Brand accents that read the same regardless of surface — they're
-  // self-contained chips/badges, not page backgrounds, so both themes share
-  // one definition.
-  --gold-accent: #b6875a;
+  // Accent phụ, dùng cho chip/badge độc lập với nền trang.
+  --gold-accent: #e8a55a;
   --on-gold-accent: #1a1108;
 
   // Price-tier badges (recipe detail + add-recipe preview): green/yellow/red
-  // reads as a familiar cheap-to-expensive scale at a glance, in both themes.
+  // reads as a familiar cheap-to-expensive scale at a glance.
   --tier-budget: #3c8a5a;
   --on-tier-budget: #eafbee;
   --tier-standard: #cf9d1d;
   --on-tier-standard: #241c02;
 
-  // Form fields default their focus outline/label to --mat-sys-primary, which
-  // is red here — reads as a validation error rather than "focused". Use the
-  // gold accent instead so a focused field never looks like an invalid one.
-  --mat-form-field-outlined-focus-outline-color: var(--gold-accent);
-  --mat-form-field-outlined-focus-label-text-color: var(--gold-accent);
-  --mat-form-field-outlined-caret-color: var(--gold-accent);
-  --mat-form-field-focus-select-arrow-color: var(--gold-accent);
-
-  // ===== Dark theme (default — applies until [data-theme="light"] is set) =====
   color-scheme: dark;
 
-  // M3's dark-mode primary auto-lightens for contrast (a pale pink here) —
-  // pin the brand accent to a fixed racing red instead. Shape keeps M3's
-  // default rounded corners (pill buttons, rounded cards).
-  --mat-sys-primary: #b3271d;
-  --mat-sys-on-primary: #fdf6ee;
-  --mat-sys-primary-container: #7d1b14;
-  --mat-sys-on-primary-container: #ffdad4;
+  // Coral — accent thương hiệu chính (DESIGN-claude.md > colors.primary).
+  --mat-sys-primary: #cc785c;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #5c3423;
+  --mat-sys-on-primary-container: #f6ddd0;
 
-  // M3 also tints its neutral surfaces with the primary hue by default.
-  // Pin them to a deliberately-chosen near-black/warm-ivory pair instead —
-  // cool-leaning ground, warm-leaning text — the low-contrast pairing that
-  // reads as "dark luxury" rather than plain #000-on-#fff-inverted.
-  --mat-sys-surface: #0a0a0c;
-  --mat-sys-on-surface: #f3efe8;
-  --mat-sys-surface-container-low: #101014;
-  --mat-sys-surface-container: #151318;
-  --mat-sys-surface-container-high: #1f1c22;
-  --mat-sys-surface-container-highest: #26222a;
-  --mat-sys-on-surface-variant: #9c948b;
-  --mat-sys-outline: #6b6660;
-  --mat-sys-outline-variant: rgba(255, 255, 255, .09);
+  // Bảng surface-dark ấm (nâu-đen, không phải xám-đen lạnh) theo
+  // DESIGN-claude.md — surface-dark / surface-dark-soft / surface-dark-elevated.
+  // Feedback: app cảm giác hơi tối -> nâng sáng nhẹ toàn bộ thang màu này (mỗi kênh
+  // RGB +~8, giữ nguyên tương quan đậm/nhạt giữa các cấp) thay vì đổi bảng màu hẳn.
+  --mat-sys-surface: #201f1d;
+  --mat-sys-on-surface: #faf9f5;
+  --mat-sys-surface-container-low: #272623;
+  --mat-sys-surface-container: #2a2724;
+  --mat-sys-surface-container-high: #2d2b28;
+  --mat-sys-surface-container-highest: #34312c;
+  --mat-sys-on-surface-variant: #a09d96;
+  --mat-sys-outline: #726d64;
+  --mat-sys-outline-variant: rgba(250, 249, 245, .09);
 }
 
-// ===== Light theme (opt-in) =====
-// Same structure as dark, inverted to a warm-ivory canvas with near-black
-// text — kept as a higher-specificity override so it wins over the base
-// `html` rule above without needing `!important`.
-html[data-theme='light'] {
-  @include mat.theme((color: (primary: mat.$red-palette,
-        tertiary: mat.$red-palette,
-        theme-type: light,
-      ),
-      typography: $typography,
-      density: 0,
-    ));
+// Material mặc định bo nút thành hình pill (9999px, "corner-full" của M3).
+// DESIGN-claude.md dùng bo góc vừa (rounded.md, 8px) cho mọi nút chuẩn — pill
+// chỉ dành riêng cho badge/chip. M3 không expose shape này qua CSS custom
+// property tách biệt được trong bản Material đang dùng, nên override thẳng
+// border-radius.
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  // !important: token "corner-full" của MDC được set qua rule nội bộ của
+  // Material (cùng specificity, nạp sau global style này trong build), nên
+  // override thường không thắng nổi — bo góc là override hình khối có chủ
+  // đích, không phải patch tạm.
+  border-radius: 8px !important;
+}
 
-  color-scheme: light;
+// "Đèn nến" (candle-light.ts) làm tối mood-lighting toàn trang theo con trỏ — các nút
+// hành động chính (filled/primary, vd "Đặt món", "Lưu công thức") cần tự phát sáng ấm
+// sẵn, không phụ thuộc chuột có đang ở gần hay không. Chỉ áp cho nút filled/raised
+// (unelevated/raised) — nút outlined/stroked là hành động phụ, cố tình không phát sáng
+// để giữ đúng phân cấp quan trọng.
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button {
+  box-shadow: 0 0 16px rgba(232, 165, 90, .35), 0 2px 6px rgba(0, 0, 0, .3) !important;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
 
-  --mat-sys-primary: #b3271d;
-  --mat-sys-on-primary: #fdf6ee;
-  --mat-sys-primary-container: #ffdad4;
-  --mat-sys-on-primary-container: #7d1b14;
+.mat-mdc-unelevated-button:hover,
+.mat-mdc-raised-button:hover {
+  box-shadow: 0 0 26px rgba(232, 165, 90, .55), 0 4px 10px rgba(0, 0, 0, .35) !important;
+}
 
-  --mat-sys-surface: #faf7f2;
-  --mat-sys-on-surface: #1c1a17;
-  --mat-sys-surface-container-low: #f6f1e9;
-  --mat-sys-surface-container: #f2ede4;
-  --mat-sys-surface-container-high: #e8e1d5;
-  --mat-sys-surface-container-highest: #ded4c3;
-  --mat-sys-on-surface-variant: #6b6259;
-  --mat-sys-outline: #8a8175;
-  --mat-sys-outline-variant: rgba(0, 0, 0, .09);
+.mat-mdc-unelevated-button:disabled,
+.mat-mdc-raised-button:disabled {
+  box-shadow: none !important;
 }
 
 body {

@@ -6,25 +6,31 @@ import {
 } from '@angular/core';
 
 import { DecimalPipe } from '@angular/common';
-import { httpResource } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { toRecipeModel } from '../recipe-mapper';
 import { RecipeStore } from '../stores/recipe-store';
-import { MealsResponse } from '../models';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AuthStore } from '../stores/auth-store';
+import { CartStore } from '../stores/cart-store';
+import { RecipeCategory } from '../models';
+
+const CATEGORY_LABELS: Record<RecipeCategory, string> = {
+  main: 'Món chính',
+  dessert: 'Tráng miệng',
+  drink: 'Đồ uống',
+};
 
 @Component({
   selector: 'app-recipe-detail',
-  imports: [RouterLink, DecimalPipe, MatCardModule, MatButtonModule, MatIconModule, MatListModule, MatDividerModule],
+  imports: [RouterLink, DecimalPipe, MatCardModule, MatButtonModule, MatIconModule, MatListModule, MatDividerModule, MatProgressSpinnerModule],
   templateUrl: './recipe-detail.html',
   styleUrl: './recipe-detail.css',
 })
@@ -34,9 +40,9 @@ export class RecipeDetail {
 
   private readonly router = inject(Router);
 
-  private readonly dialog = inject(MatDialog);
-
   private readonly snackBar = inject(MatSnackBar);
+
+  protected readonly authStore = inject(AuthStore);
 
   protected readonly youtubeUrl = computed((): SafeResourceUrl => {
 
@@ -54,40 +60,20 @@ export class RecipeDetail {
 
   private readonly store = inject(RecipeStore);
 
+  private readonly cartStore = inject(CartStore);
+
   private readonly params = toSignal(this.route.paramMap);
 
-  // 1. id từ URL — tách riêng ra vì cả hai chỗ dưới đều cần
-  private readonly recipeId = computed(() => Number(this.params()?.get('id')));
+  // id từ URL — tách riêng ra vì cả hai chỗ dưới đều cần
+  private readonly recipeId = computed(() => this.params()?.get('id') ?? '');
 
-  // 2. thử local trước
-  protected readonly localRecipe = computed(() => {
+  protected readonly selectedRecipe = computed(() => {
     return this.store.getRecipeById(this.recipeId());
   });
 
-  // 3. chỉ gọi mạng khi local không có
-  protected readonly apiMeal = httpResource<MealsResponse>(() => {
-    if (this.localRecipe()) {
-      return undefined; // ← có rồi, khỏi gọi
-    }
-    return `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${this.recipeId()}`;
-  });
-
-  protected readonly selectedRecipe = computed(() => {
-    if (this.localRecipe()) {
-      return this.localRecipe();
-    }
-
-    if (!this.apiMeal.hasValue()) {
-      return undefined;
-    }
-
-    const meal = this.apiMeal.value().meals?.[0];
-    if (!meal) {
-      return undefined;
-    }
-
-    return toRecipeModel(meal);
-  });
+  // FE-09/10: tránh nháy sai "Không tìm thấy công thức" trong lúc danh sách còn
+  // đang tải lần đầu (vd user vào thẳng /recipes/:id hoặc F5 trang chi tiết).
+  protected readonly isLoadingRecipes = computed(() => this.store.isLoading());
 
   protected readonly soPhanAn = signal(1);
 
@@ -120,14 +106,11 @@ export class RecipeDetail {
 
   });
 
+  // Giảm giá số lượng (≥5 phần) — xem trước cho khớp với số thật sẽ tính khi xác nhận
+  // mua ở giỏ hàng (cart.ts). Ưu đãi reward (bắt chuột...) giờ chỉ áp được ở trang giỏ
+  // hàng, vì đó mới là nơi thật sự tạo Order (xem cart.ts) — trang này chỉ thêm vào giỏ.
   protected readonly tongTienSauGiam = computed(() => {
-
-    if (this.soPhanAn() >= 5) {
-      return this.tongTien() * 0.9;
-    }
-
-    return this.tongTien();
-
+    return this.soPhanAn() >= 5 ? Math.round(this.tongTien() * 0.9) : this.tongTien();
   });
 
   protected readonly tongSoNguyenLieu = computed(() => {
@@ -137,6 +120,10 @@ export class RecipeDetail {
     }, 0);
 
   });
+
+  protected categoryLabel(category: RecipeCategory): string {
+    return CATEGORY_LABELS[category];
+  }
 
   protected increaseServings() {
     this.soPhanAn.update(n => n + 1);
@@ -152,32 +139,27 @@ export class RecipeDetail {
 
   }
 
-  protected deleteRecipe(): void {
+  protected readonly addingToCart = signal(false);
 
-    const recipe = this.localRecipe();
-
-    if (!recipe) {
+  protected async addToCart(): Promise<void> {
+    const recipe = this.selectedRecipe();
+    if (!recipe || this.addingToCart()) {
       return;
     }
 
-    const dialogRef = this.dialog.open(ConfirmDialog, {
-      data: {
-        title: 'Xoá công thức?',
-        message: `Bạn có chắc muốn xoá "${recipe.name}"? Hành động này không thể hoàn tác.`,
-        confirmText: 'Xoá',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed) => {
-      if (!confirmed) {
-        return;
-      }
-
-      this.store.deleteRecipe(recipe.id);
-      this.router.navigate(['/recipes']);
-      this.snackBar.open('Đã xoá công thức', 'Đóng', { duration: 3000 });
-    });
-
+    this.addingToCart.set(true);
+    try {
+      await this.cartStore.addItem(recipe.id, this.soPhanAn());
+      const snackBarRef = this.snackBar.open('Đã thêm vào giỏ hàng', 'Xem giỏ hàng', { duration: 5000 });
+      snackBarRef.onAction().subscribe(() => this.router.navigate(['/cart']));
+    } catch (err) {
+      const message = err instanceof HttpErrorResponse && typeof err.error?.message === 'string'
+        ? err.error.message
+        : 'Không thể thêm vào giỏ hàng, thử lại sau';
+      this.snackBar.open(message, 'Đóng', { duration: 4000 });
+    } finally {
+      this.addingToCart.set(false);
+    }
   }
 
 }

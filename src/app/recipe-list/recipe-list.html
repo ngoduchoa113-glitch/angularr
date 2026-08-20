@@ -1,3 +1,23 @@
+<section class="hero">
+
+    <img class="hero-image" src="/images/witch-kitchen-hero.png" alt="">
+
+    <!-- Ngọn nến "sáng hơn" thật trong ảnh — quầng sáng ấm đặt đúng vị trí bếp lửa/nến
+         trên bàn trong ảnh gốc, lung linh nhẹ, không phụ thuộc ánh sáng theo con trỏ
+         (app-candle-light) vì nến trong tranh phải luôn sáng kể cả khi chuột ở xa. -->
+    <div class="hero-candle-glow hero-candle-glow-stove" aria-hidden="true"></div>
+    <div class="hero-candle-glow hero-candle-glow-table" aria-hidden="true"></div>
+
+    <div class="hero-scrim"></div>
+
+    <div class="hero-content">
+        <span class="hero-eyebrow">Midnight Cat</span>
+        <h1 class="hero-title">The Witch's Midnight Kitchen</h1>
+        <p class="hero-subtitle">Công thức được nấu dưới ánh nến, dành cho những tâm hồn thích phiêu lưu.</p>
+    </div>
+
+</section>
+
 <div class="search-group">
 
     <mat-form-field appearance="outline">
@@ -22,23 +42,39 @@
 
 </div>
 
-<div class="sort-buttons">
+<div class="toolbar-buttons">
 
-    <button mat-stroked-button [class.active]="sortType() === 'price-asc'" (click)="setSort('price-asc')">
-        ↑ Giá tăng
+    <button mat-stroked-button [matMenuTriggerFor]="sortMenu">
+        {{ sortLabel() }}
+        <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
     </button>
 
-    <button mat-stroked-button [class.active]="sortType() === 'price-desc'" (click)="setSort('price-desc')">
-        ↓ Giá giảm
+    <mat-menu #sortMenu="matMenu">
+        @for (option of sortOptions; track option.value) {
+        <button mat-menu-item [class.active]="sortType() === option.value" (click)="setSort(option.value)">
+            @if (sortType() === option.value) {
+            <mat-icon>check</mat-icon>
+            }
+            {{ option.label }}
+        </button>
+        }
+    </mat-menu>
+
+    <button mat-stroked-button [matMenuTriggerFor]="categoryMenu">
+        Tag: {{ categoryTriggerLabel() }}
+        <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
     </button>
 
-    <button mat-stroked-button [class.active]="sortType() === 'name-asc'" (click)="setSort('name-asc')">
-        A→Z
-    </button>
-
-    <button mat-stroked-button [class.active]="sortType() === 'name-desc'" (click)="setSort('name-desc')">
-        Z→A
-    </button>
+    <mat-menu #categoryMenu="matMenu">
+        @for (option of categoryOptions; track option.value) {
+        <button mat-menu-item [class.active]="categoryFilter() === option.value" (click)="setCategoryFilter(option.value)">
+            @if (categoryFilter() === option.value) {
+            <mat-icon>check</mat-icon>
+            }
+            {{ option.label }}
+        </button>
+        }
+    </mat-menu>
 
     <button mat-stroked-button class="favorites-toggle" [class.active]="showFavoritesOnly()"
         (click)="toggleFavoritesOnly()">
@@ -51,10 +87,26 @@
 @if (isSearching()) {
 
 <p class="result-count">
+    @if (belowMinLength()) {
+    Nhập ít nhất {{ minKeywordLength }} ký tự để tìm kiếm
+    } @else if (store.isSearchLoading()) {
+    <mat-spinner diameter="16" class="search-spinner" aria-label="Đang tìm kiếm" />
+    Đang tìm kiếm...
+    } @else {
     Tìm thấy {{ resultCount() }} món
+    }
 </p>
 
 }
+
+@if (store.isLoading() && !isSearching()) {
+
+<div class="loading-state">
+    <mat-spinner diameter="32" aria-label="Đang tải danh sách món" />
+    <p>Đang tải danh sách...</p>
+</div>
+
+} @else {
 
 <div class="recipe-grid">
 
@@ -81,8 +133,11 @@
 
             <span class="recipe-card-price">{{ recipe.price | number }} đ</span>
 
+            <span class="recipe-card-category">{{ categoryLabel(recipe.category) }}</span>
+
         </div>
 
+        @if (authStore.isAdmin()) {
         <button mat-icon-button class="recipe-card-fav" [class.is-favorite]="recipe.isFavorite"
             (click)="toggleFavorite(recipe, $event)">
 
@@ -91,6 +146,7 @@
             </mat-icon>
 
         </button>
+        }
 
     </a>
 
@@ -115,8 +171,11 @@
 
             <span class="recipe-card-price">{{ recipe.price | number }} đ</span>
 
+            <span class="recipe-card-category">{{ categoryLabel(recipe.category) }}</span>
+
         </div>
 
+        @if (authStore.isAdmin()) {
         <button mat-icon-button class="recipe-card-fav" [class.is-favorite]="recipe.isFavorite"
             (click)="toggleFavorite(recipe, $event)">
 
@@ -125,6 +184,7 @@
             </mat-icon>
 
         </button>
+        }
 
     </a>
 
@@ -132,44 +192,24 @@
 
     } @empty {
 
-    <p class="empty-state">
-        {{ showFavoritesOnly() ? 'Chưa có món yêu thích nào.' : 'Không tìm thấy món nào.' }}
-    </p>
+    <div class="empty-state">
+
+        <svg class="empty-state-illustration" viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M84 14a11 11 0 1 0 0 20 13 13 0 1 1 0-20Z" fill="currentColor" opacity=".3" />
+            <path d="M30 40 18 15l22 11Z" fill="currentColor" opacity=".55" />
+            <path d="M70 40 82 15 60 26Z" fill="currentColor" opacity=".55" />
+            <circle cx="50" cy="57" r="27" fill="currentColor" opacity=".55" />
+            <circle cx="40" cy="55" r="3" fill="var(--mat-sys-surface)" />
+            <circle cx="60" cy="55" r="3" fill="var(--mat-sys-surface)" />
+            <path d="M46 65h8l-4 4Z" fill="var(--mat-sys-surface)" />
+        </svg>
+
+        <p>{{ emptyStateMessage() }}</p>
+
+    </div>
 
     }
 
-</div>
-
-<mat-divider class="section-divider"></mat-divider>
-
-@let meals = store.meals;
-@if(meals.isLoading()) {
-<mat-spinner diameter="50" aria-label="polite"></mat-spinner>
-}
-@else if(meals.error()) {
-<p>LỖI RỒI NGHỈ MẸ ĐI CON</p>
-<button matButton="filled" type="button" (click)="meals.reload()">
-    <mat-icon>refresh</mat-icon>
-    thử lại
-</button>
-
-} @else {
-
-<div class="recipe-grid">
-    @for (recipe of store.apiRecipes(); track recipe.id) {
-    <a class="recipe-card" [routerLink]="['/recipes', recipe.id]">
-
-        <img class="recipe-card-image" [src]="recipe.imgUrl" alt="">
-
-        <div class="recipe-card-body">
-            <span class="recipe-card-title">{{ recipe.name }}</span>
-            <span class="recipe-card-price">{{ recipe.price | number }} đ</span>
-        </div>
-
-    </a>
-    } @empty {
-    <p class="empty-state">không có món nào từ máy chủ</p>
-    }
 </div>
 
 }

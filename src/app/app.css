@@ -2,6 +2,12 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+
+    /* "Grimoire" — 2 texture noise SVG dùng chung: bản "wood" đậm hơn cho gỗ/da
+       (toolbar, sidebar), bản "paper" nhạt hơn nhiều cho giấy (content) — chỉ khác
+       opacity của rect bên trong SVG, tránh lặp lại chuỗi data-URI dài nhiều lần. */
+    --grimoire-noise-wood: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+    --grimoire-noise-paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
 }
 
 /* ====================== Top app bar ====================== */
@@ -16,9 +22,15 @@
 
     height: 100px;
 
-    background: var(--mat-sys-surface);
+    /* Bìa/gáy sách phép — gỗ tối phủ noise + viền vàng mờ như mép sách mạ vàng,
+       thay cho nền phẳng --mat-sys-surface trước đây. */
+    background:
+        var(--grimoire-noise-wood),
+        linear-gradient(180deg, #2e2117 0%, #1f1711 100%);
+    background-blend-mode: overlay, normal;
+    background-size: 180px 180px, cover;
 
-    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    border-bottom: 1px solid rgba(232, 165, 90, .18);
 
     box-shadow: none;
 
@@ -30,6 +42,8 @@
 .app-logo-link {
 
     display: inline-flex;
+
+    flex-shrink: 0;
 
     border-radius: 50%;
 
@@ -47,6 +61,10 @@
 
     height: 48px;
 
+    flex-shrink: 0;
+
+    aspect-ratio: 1 / 1;
+
     border-radius: 50%;
 
     object-fit: cover;
@@ -54,17 +72,22 @@
 
 .app-title {
 
-    font-family: 'Lato', sans-serif;
+    font-family: 'Cormorant Garamond', serif;
 
     font-size: 24px;
 
-    font-weight: 700;
+    font-weight: 400;
 
     letter-spacing: 0.12em;
 
     text-transform: uppercase;
 
     color: var(--mat-sys-on-surface);
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 .app-toolbar-spacer {
@@ -72,9 +95,66 @@
     flex: 1 1 auto;
 }
 
-.theme-toggle {
+.app-user-info {
 
-    color: var(--mat-sys-on-surface-variant);
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-family: 'Inter', sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    color: var(--mat-sys-on-surface);
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.app-user-info:hover {
+
+    color: var(--mat-sys-primary);
+}
+
+.app-role-badge {
+
+    padding: 2px 10px;
+
+    border-radius: 9999px;
+
+    background: var(--mat-sys-primary);
+
+    color: var(--mat-sys-on-primary);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    flex-shrink: 0;
+}
+
+/* FE-08: dưới ngưỡng này, tên nhà hàng (chữ dài + letter-spacing rộng) cùng lúc
+   với email/nút bên phải không đủ chỗ trên 1 hàng toolbar -> ẩn chữ, giữ lại logo. */
+@media (max-width: 480px) {
+    .app-title {
+        display: none;
+    }
+
+    .app-user-info {
+        max-width: 96px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 /* ====================== Body: drawer + content ====================== */
@@ -88,41 +168,149 @@
     background: var(--mat-sys-surface);
 }
 
-.app-drawer {
-
-    width: 280px;
-
-    background: var(--mat-sys-surface-container-high);
-
-    border-right: 1px solid var(--mat-sys-outline-variant);
-}
-
-.app-drawer mat-nav-list {
-
-    padding-top: 8px;
-}
-
-.app-drawer a[mat-list-item].active-link {
-
-    background: var(--mat-sys-surface-container-highest);
-
-    color: var(--mat-sys-primary);
-}
-
 .app-content {
+
+    /* Trang giấy cũ — giữ nguyên tông --mat-sys-surface hiện có (không đổi màu nền
+       gốc, tránh ảnh hưởng độ tương phản của mọi component bên trong đã tinh chỉnh
+       theo tông đó) — chỉ phủ thêm noise rất nhạt + vignette tối nhẹ ở mép trên,
+       gợi giấy da hơi ố theo thời gian mà không làm rối nội dung. */
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .14) 100%),
+        var(--grimoire-noise-paper),
+        var(--mat-sys-surface);
+    background-blend-mode: normal, overlay, normal;
+    background-size: cover, 180px 180px, auto;
 
     padding: 24px;
 }
 
-/* ====================== FAB ====================== */
+.app-drawer {
 
-.app-fab {
+    width: 280px;
 
-    position: fixed;
+    /* Mục lục sách phép — gỗ/da tối, cùng chất liệu với toolbar, tạo cảm giác
+       sidebar là "gáy sách" liền mạch với bìa trên. */
+    background:
+        var(--grimoire-noise-wood),
+        linear-gradient(200deg, #322419 0%, #1d1610 100%);
+    background-blend-mode: overlay, normal;
+    background-size: 180px 180px, cover;
 
-    right: 24px;
+    border-right: 1px solid rgba(232, 165, 90, .14);
 
-    bottom: 24px;
+    /* Bóng đổ vào trong ở mép phải — gợi nếp gấp nơi gáy sách nối vào trang giấy. */
+    box-shadow: inset -8px 0 16px -10px rgba(0, 0, 0, .7);
+}
 
-    z-index: 5;
+/* Góc trên-phải: mạng nhện — chỉ 1 góc nhỏ, không phủ hết sidebar (feedback: tránh
+   phủ mạng nhện toàn bộ, chỉ cần 2 góc). pointer-events:none để không bao giờ chặn
+   click vào mục điều hướng bên dưới, dù có vô tình nằm đè lên nhau. */
+.app-drawer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 110px;
+    height: 110px;
+    z-index: 0;
+    pointer-events: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='0.8'%3E%3Cline x1='100' y1='0' x2='10' y2='5'/%3E%3Cline x1='100' y1='0' x2='30' y2='15'/%3E%3Cline x1='100' y1='0' x2='55' y2='35'/%3E%3Cline x1='100' y1='0' x2='75' y2='60'/%3E%3Cline x1='100' y1='0' x2='90' y2='85'/%3E%3Cpolyline points='68.5,1.75 75.5,5.25 84.25,12.25 91.25,21 96.5,29.75'/%3E%3Cpolyline points='41.5,3.25 54.5,9.75 70.75,22.75 83.75,39 93.5,55.25'/%3E%3Cpolyline points='10,5 30,15 55,35 75,60 90,85'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+/* Góc dưới-trái: chai potion phát sáng nhẹ + vài nhánh cây khô. */
+.app-drawer::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 90px;
+    height: 90px;
+    z-index: 0;
+    pointer-events: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='rgba(180,150,110,0.5)' stroke-width='1.2' fill='none' stroke-linecap='round'%3E%3Cpath d='M15 100 L10 78 L4 68'/%3E%3Cpath d='M10 78 L18 70'/%3E%3Cpath d='M15 100 L22 82 L28 74'/%3E%3C/g%3E%3Cg%3E%3Crect x='30' y='60' width='16' height='28' rx='4' fill='rgba(40,30,20,0.55)' stroke='rgba(232,165,90,0.4)' stroke-width='1'/%3E%3Crect x='35' y='50' width='6' height='12' fill='rgba(40,30,20,0.55)' stroke='rgba(232,165,90,0.4)' stroke-width='1'/%3E%3Cellipse cx='38' cy='50' rx='4' ry='2' fill='rgba(120,90,60,0.6)'/%3E%3Crect x='32' y='68' width='12' height='18' rx='3' fill='rgba(150,220,140,0.45)'/%3E%3Ccircle cx='38' cy='72' r='2' fill='rgba(180,255,170,0.6)'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+/* position:relative + z-index:1 để mat-nav-list luôn nằm trên các pseudo-element
+   trang trí góc (z-index 0 ở trên) — click vào mục điều hướng luôn ưu tiên, kể cả khi
+   nằm chồng lên vùng góc dưới-trái. */
+.app-drawer mat-nav-list {
+
+    position: relative;
+    z-index: 1;
+
+    padding-top: 16px;
+}
+
+.app-drawer a[mat-list-item] {
+
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    color: rgba(243, 236, 216, .78);
+}
+
+.app-drawer a[mat-list-item] mat-icon {
+
+    color: rgba(243, 236, 216, .5);
+}
+
+.app-drawer a[mat-list-item]:hover {
+
+    background: rgba(0, 0, 0, .18);
+}
+
+.app-drawer a[mat-list-item].active-link {
+
+    background: rgba(0, 0, 0, .24);
+
+    color: #f3ecd8;
+
+    position: relative;
+}
+
+/* "Dải đánh dấu" bên trái mục đang chọn — như ruy băng đánh dấu trang trong sách
+   phép, thay cho mảng nền đổi màu phẳng trước đây. */
+.app-drawer a[mat-list-item].active-link::before {
+
+    content: '';
+
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+
+    background: var(--mat-sys-primary);
+}
+
+.app-drawer a[mat-list-item].active-link mat-icon {
+
+    color: var(--mat-sys-primary);
+}
+
+.admin-nav-heading {
+
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+
+    color: rgba(232, 165, 90, .8);
+
+    padding: 18px 16px 6px;
+}
+
+.app-drawer mat-divider {
+
+    border-top-color: rgba(232, 165, 90, .22);
+
+    margin: 8px 16px;
 }

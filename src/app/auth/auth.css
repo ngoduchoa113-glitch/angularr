@@ -1,0 +1,208 @@
+:host {
+    display: block;
+
+    /* .app-content (app.css) đặt padding:24px quanh mọi route — huỷ nó ở riêng
+       trang này để illustration tràn full-bleed, không bị viền trắng 2 bên. */
+    margin: -24px;
+    overflow: hidden;
+}
+
+.auth-shell {
+    display: flex;
+    /* height cố định (không phải min-height) + overflow:hidden trên :host —
+       trang không bao giờ scroll dọc. Nếu nội dung form (vd mode signup có
+       nhiều field) cao hơn chỗ trống, chỉ .form-panel tự cuộn nội bộ bên dưới,
+       không kéo giãn cả layout. */
+    height: calc(100vh - 100px);
+
+    transition: opacity .55s ease, filter .55s ease, transform .55s ease;
+}
+
+/* Hiệu ứng "bước qua cửa" khi đăng nhập/đăng ký thành công — xem
+   Auth.onActionSucceeded(). Cả 2 panel cùng phóng to nhẹ + tối dần + mờ đi,
+   như đang bước xuyên qua khung cửa vào bên trong. */
+.auth-shell.leaving {
+    opacity: 0;
+    filter: brightness(.35);
+    transform: scale(1.06);
+}
+
+/* ============== Illustration panel (trái) ============== */
+
+.illustration-panel {
+    position: relative;
+    flex: 0 0 50%;
+    min-width: 0;
+    overflow: hidden;
+    background: #0c0a16;
+}
+
+.house-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Ảnh vuông (736x736) — ưu tiên giữ phần trên (cây, tháp, trăng) khi
+       container cao hơn tỷ lệ vuông, thay vì crop đều 2 bên trên/dưới. */
+    object-position: center 30%;
+}
+
+/* Lớp phủ tối nhẹ dưới chân để chữ caption luôn đọc rõ trên mọi vùng ảnh. */
+.illustration-scrim {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 35%;
+    background: linear-gradient(to top, rgba(8, 6, 4, .75), rgba(8, 6, 4, 0));
+    pointer-events: none;
+}
+
+.illustration-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    margin: 0;
+    text-align: center;
+
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    letter-spacing: .02em;
+    color: #f3ecd8;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, .6);
+}
+
+/* ============== Form panel (phải) ============== */
+
+.form-panel {
+    flex: 1 1 50%;
+    min-width: 0;
+    height: 100%;
+    /* overflow-y:auto trên chính container flex "align-items/justify-content:
+       center" phá centering — khi 1 trục có overflow khác visible, trình
+       duyệt tự chuyển sang "safe alignment" (= flex-start) để tránh cắt mất
+       nội dung nếu nó tràn, kể cả khi thực tế chưa tràn. Kết quả: form bị dồn
+       sát trái thay vì nằm giữa panel ở màn hình rộng. Dùng margin:auto trên
+       .form-inner để tự center — không bị ảnh hưởng bởi quirk này. */
+    overflow-y: auto;
+    display: flex;
+    padding: 48px 40px;
+    background: var(--mat-sys-surface);
+}
+
+.form-inner {
+    width: 100%;
+    max-width: 380px;
+    margin: auto;
+}
+
+.eyebrow {
+    display: block;
+    color: var(--mat-sys-primary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.auth-title {
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 36px;
+    letter-spacing: -.01em;
+    line-height: 1.15;
+    color: var(--mat-sys-on-surface);
+}
+
+.auth-subtitle {
+    margin: 12px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 32px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-label {
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    font-size: .72em;
+    font-weight: 600;
+}
+
+.forgot-link {
+    margin: -10px 0 0;
+    text-align: right;
+    font-size: 13px;
+}
+
+.forgot-link a,
+.auth-switch a {
+    color: var(--mat-sys-primary);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.form-success {
+    margin: 0;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+    font-size: 13px;
+}
+
+button[mat-flat-button] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 0 32px;
+    height: 48px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.auth-switch {
+    margin: 24px 0 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* ============== Responsive ============== */
+
+@media (max-width: 900px) {
+    .auth-shell {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .illustration-panel {
+        flex: 0 0 280px;
+    }
+
+    .illustration-caption {
+        bottom: 20px;
+        font-size: 18px;
+    }
+
+    .form-panel {
+        padding: 40px 24px 64px;
+    }
+}

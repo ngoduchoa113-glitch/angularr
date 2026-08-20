@@ -4,14 +4,24 @@
     align-items: center;
 
     width: 100%;
+    box-sizing: border-box;
 
-    padding: 30px 0 60px;
+    padding: 30px 16px 60px;
 }
 
-/* ===== Thanh công cụ (quay lại / sửa / xoá) ===== */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 64px 0;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* ===== Thanh công cụ (quay lại) ===== */
 
 .detail-toolbar {
-    width: min(900px, 90vw);
+    width: min(900px, 100%);
 
     display: flex;
     align-items: center;
@@ -22,9 +32,7 @@
     margin-bottom: 24px;
 }
 
-.back-link,
-.edit-link,
-.delete-btn {
+.back-link {
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -34,74 +42,140 @@
     border-color: var(--mat-sys-outline);
 }
 
-.back-link:hover,
-.edit-link:hover {
+.back-link:hover {
     background: var(--mat-sys-surface-container-highest);
     border-color: var(--mat-sys-primary);
 }
 
-.detail-actions {
+/* ===== Header cinematic (ảnh full-width + tiêu đề đè lên gradient tối) ===== */
+
+.detail-hero {
+    position: relative;
+    width: min(900px, 100%);
+    height: 380px;
+    margin-bottom: 24px;
+    border-radius: var(--mat-sys-corner-large);
+    overflow: hidden;
     display: flex;
-    gap: 12px;
+    align-items: flex-end;
+
+    background: linear-gradient(160deg, var(--mat-sys-surface-container-high), #17110c);
+
+    animation: fadeIn .35s ease;
 }
 
-.delete-btn {
-    color: var(--mat-sys-error);
+.detail-hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.delete-btn:hover {
-    background: var(--mat-sys-surface-container-highest);
-    border-color: var(--mat-sys-error);
+.detail-hero-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.detail-hero-placeholder mat-icon {
+    opacity: .5;
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+}
+
+.detail-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 7, 5, .92) 0%, rgba(10, 7, 5, .45) 55%, rgba(10, 7, 5, .05) 100%);
+}
+
+.detail-hero-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 13px;
+
+    background: rgba(20, 15, 12, .55);
+    backdrop-filter: blur(4px);
+    border-color: rgba(255, 255, 255, .28);
+    color: #f3ecd8;
+}
+
+.detail-hero-back:hover {
+    background: rgba(20, 15, 12, .75);
+    border-color: var(--mat-sys-primary);
+}
+
+.detail-hero-content {
+    position: relative;
+    padding: 32px 36px;
+}
+
+.detail-hero-category {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+}
+
+.detail-hero-title {
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.15;
+    color: #f3ecd8;
+}
+
+.detail-hero-subtitle {
+    margin: 10px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(243, 236, 216, .85);
+    max-width: 640px;
+}
+
+@media (max-width: 600px) {
+
+    .detail-hero {
+        height: 300px;
+    }
+
+    .detail-hero-content {
+        padding: 20px 24px;
+    }
+
+    .detail-hero-title {
+        font-size: 28px;
+    }
 }
 
 /* ===== Card ===== */
 
 .recipe-card {
-    width: min(900px, 90vw);
+    width: min(900px, 100%);
 
     border: 1px solid var(--mat-sys-outline-variant);
     box-shadow: none;
     overflow: hidden;
 
     animation: fadeIn .35s ease;
-}
-
-.recipe-card img[mat-card-image] {
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-
-    transition: transform .5s cubic-bezier(.2, .8, .2, 1);
-}
-
-.recipe-card:hover img[mat-card-image] {
-    transform: scale(1.04);
-}
-
-.recipe-image-placeholder {
-    aspect-ratio: 16 / 9;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    background: var(--mat-sys-surface-container-high);
-    color: var(--mat-sys-on-surface-variant);
-}
-
-.recipe-image-placeholder mat-icon {
-    opacity: .6;
-
-    font-size: 32px;
-    width: 32px;
-    height: 32px;
-}
-
-.recipe-image-placeholder span {
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
 }
 
 @keyframes fadeIn {
@@ -123,13 +197,6 @@
 .recipe-price {
     text-align: center;
     margin: 20px 0;
-}
-
-/* ===== Mô tả ===== */
-
-mat-card-subtitle {
-    margin-top: 8px;
-    line-height: 1.6;
 }
 
 /* ===== Số phần ===== */
@@ -286,4 +353,17 @@ h3 {
 
 .discount strong {
     color: var(--gold-accent);
+}
+
+.place-order-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 20px;
+    height: 48px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }

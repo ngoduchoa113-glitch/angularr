@@ -1,0 +1,274 @@
+:host {
+    display: block;
+    padding: 48px 24px 96px;
+
+    /* Bảng màu categorical đã chạy qua validate_palette.js (all-pairs, CVD pass)
+       — 3 slot đầu, xem admin-dashboard.ts để biết lý do không dùng cặp status
+       good/critical (đỏ/xanh lá) cho donut trạng thái đơn. */
+    --chart-series-1: #3987e5;
+    --chart-series-2: #d95926;
+    --chart-series-3: #199e70;
+    --chart-surface: #1a1a19;
+    --chart-grid: #2c2c2a;
+    --chart-axis: #383835;
+}
+
+.dashboard-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 34px;
+    margin: 0 0 24px;
+    color: var(--mat-sys-on-surface);
+}
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 64px 0;
+    color: var(--mat-sys-on-surface-variant);
+}
+
+/* Stat tiles */
+
+.stat-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-tile {
+    padding: 20px !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--mat-sys-outline-variant);
+    background: var(--mat-sys-surface-container) !important;
+    box-shadow: none !important;
+}
+
+.stat-label {
+    display: block;
+    font-size: 12px;
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 6px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+}
+
+/* Chart cards */
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.chart-card {
+    padding: 24px !important;
+    border-radius: 16px !important;
+    border: 1px solid var(--mat-sys-outline-variant);
+    background: var(--mat-sys-surface-container) !important;
+    box-shadow: none !important;
+}
+
+.chart-card-title {
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+}
+
+/* Donut */
+
+.donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.donut-wrap svg {
+    flex-shrink: 0;
+}
+
+.donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface);
+}
+
+.legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.legend-count {
+    margin-left: auto;
+    color: var(--mat-sys-on-surface-variant);
+    font-variant-numeric: tabular-nums;
+}
+
+.donut-center-label {
+    font-size: 20px;
+    font-weight: 700;
+    fill: var(--mat-sys-on-surface);
+}
+
+.donut-center-sublabel {
+    font-size: 10px;
+    fill: var(--mat-sys-on-surface-variant);
+}
+
+/* Line chart */
+
+.line-chart-wrap {
+    position: relative;
+}
+
+/* FE-08: SVG có width/height cố định (px) qua thuộc tính để giữ toạ độ nội bộ
+   (viewBox) đúng tỉ lệ — nhưng phải co lại theo khung chứa trên màn hình hẹp,
+   nếu không sẽ ép cả trang tràn ngang. CSS width/height thắng thuộc tính HTML. */
+.line-chart-wrap svg {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    height: auto;
+}
+
+.line-gridline {
+    stroke: var(--chart-grid);
+    stroke-width: 1;
+}
+
+.line-axis-label {
+    font-size: 9px;
+    fill: var(--mat-sys-on-surface-variant);
+}
+
+.line-path {
+    fill: none;
+    stroke: var(--chart-series-1);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.line-marker {
+    fill: var(--chart-series-1);
+    stroke: var(--chart-surface);
+    stroke-width: 2;
+}
+
+.line-hover-target {
+    fill: transparent;
+    cursor: crosshair;
+}
+
+.line-crosshair {
+    stroke: var(--chart-axis);
+    stroke-width: 1;
+    stroke-dasharray: 2 2;
+    pointer-events: none;
+}
+
+.line-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--mat-sys-inverse-surface);
+    color: var(--mat-sys-inverse-on-surface);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    transform: translate(-50%, -130%);
+    z-index: 1;
+}
+
+.line-end-label {
+    font-size: 12px;
+    font-weight: 700;
+    fill: var(--mat-sys-on-surface);
+}
+
+/* Bar chart */
+
+.bar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bar-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 56px;
+    align-items: center;
+    gap: 10px;
+}
+
+.bar-row-label {
+    font-size: 13px;
+    color: var(--mat-sys-on-surface);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bar-track {
+    height: 20px;
+    background: var(--mat-sys-surface-container-high);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: var(--chart-series-1);
+    border-radius: 4px;
+    transition: width 0.2s ease;
+}
+
+.bar-row-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.empty-chart {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 13px;
+    text-align: center;
+    padding: 24px 0;
+}
+
+@media (max-width: 900px) {
+    .stat-tiles {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+}

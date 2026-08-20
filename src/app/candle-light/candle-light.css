@@ -1,0 +1,44 @@
+:host {
+    position: fixed;
+    inset: 0;
+    /* Dưới mascot (z-index 500) và dưới CDK overlay (dialog/menu/snackbar, 1000+) —
+       không bao giờ che các lớp đó — nhưng trên mọi nội dung trang thường. */
+    z-index: 400;
+    pointer-events: none;
+
+    --candle-x: 50vw;
+    --candle-y: 35vh;
+}
+
+/* Không có chuột thật (điện thoại/bảng chạm) thì không có "con trỏ" để đi theo —
+   ẩn hẳn thay vì để ánh sáng đứng yên 1 chỗ trông như lỗi. */
+@media (hover: none), (pointer: coarse) {
+    :host {
+        display: none;
+    }
+}
+
+.candle-glow,
+.candle-dark {
+    position: absolute;
+    inset: 0;
+}
+
+/* Ánh sáng ấm màu nến hoà nhẹ quanh con trỏ. */
+.candle-glow {
+    background: radial-gradient(circle 240px at var(--candle-x) var(--candle-y),
+            rgba(232, 165, 90, .18) 0%,
+            rgba(232, 165, 90, .06) 45%,
+            transparent 75%);
+    mix-blend-mode: soft-light;
+}
+
+/* Vùng tối bao quanh — chỉ mờ nhẹ ở xa con trỏ, KHÔNG tối cả trang (feedback:
+   bản đầu làm tối quá nhiều nơi vốn cần sáng sẵn — nến trong hero, nút quan
+   trọng...). Đây giờ là 1 lớp mood-lighting rất nhẹ, không phải "phòng tối". */
+.candle-dark {
+    background: radial-gradient(circle 340px at var(--candle-x) var(--candle-y),
+            transparent 0%,
+            rgba(6, 4, 2, .08) 65%,
+            rgba(6, 4, 2, .17) 100%);
+}

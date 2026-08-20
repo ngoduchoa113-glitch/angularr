@@ -1,0 +1,64 @@
+<button type="button" class="cat-mascot-hit-area" [class.sleeping]="sleeping()" [class.running]="running()"
+    (click)="onCatClick()" aria-label="Mèo Midnight Cat">
+
+    @if (showMeow()) {
+    <div class="speech-bubble">Meow~</div>
+    }
+
+    @if (happy()) {
+    <div class="happy-heart">♥</div>
+    }
+
+    <svg class="cat-svg" viewBox="0 0 80 80" [class.sleeping]="sleeping()" [class.blinking]="blinking()"
+        [class.happy]="happy()" [class.running]="running()" aria-hidden="true">
+
+        <!-- Đuôi — transform-origin đặt ở gốc đuôi (xem .cat-tail trong CSS) -->
+        <path class="cat-tail" d="M60 58 Q75 53 72 36 Q71 25 61 28" fill="none" stroke="currentColor"
+            stroke-width="6" stroke-linecap="round" />
+
+        <!-- Thân -->
+        <ellipse class="cat-body" cx="40" cy="53" rx="22" ry="18" fill="currentColor" />
+
+        <!-- Đầu -->
+        <g class="cat-head">
+
+            <path d="M23 20 19 4 34 13Z" fill="currentColor" />
+            <path d="M57 20 61 4 46 13Z" fill="currentColor" />
+
+            <circle cx="40" cy="27" r="17" fill="currentColor" />
+
+            <!-- Mắt mở (chớp/theo dõi con trỏ) — màu hổ phách/vàng cho tương phản rõ
+                 với thân đen (dùng var(--mat-sys-surface) trước đây gần như đen trùng
+                 màu mèo, gần như vô hình). -->
+            <g class="cat-eyes-open">
+                <circle cx="33" cy="26" r="5.5" fill="var(--gold-accent, #e8a55a)" />
+                <circle cx="47" cy="26" r="5.5" fill="var(--gold-accent, #e8a55a)" />
+                <circle class="cat-pupil" cx="33" cy="26" r="2.6" fill="currentColor"
+                    [attr.transform]="'translate(' + pupilX() + ' ' + pupilY() + ')'" />
+                <circle class="cat-pupil" cx="47" cy="26" r="2.6" fill="currentColor"
+                    [attr.transform]="'translate(' + pupilX() + ' ' + pupilY() + ')'" />
+            </g>
+
+            <!-- Mắt nhắm (ngủ / chớp mắt) -->
+            <g class="cat-eyes-closed">
+                <path d="M28 27q5-4 10 0" fill="none" stroke="var(--gold-accent, #e8a55a)" stroke-width="1.6"
+                    stroke-linecap="round" />
+                <path d="M42 27q5-4 10 0" fill="none" stroke="var(--gold-accent, #e8a55a)" stroke-width="1.6"
+                    stroke-linecap="round" />
+            </g>
+
+            <path class="cat-nose" d="M38 33h4l-2 2Z" fill="var(--mat-sys-primary, #cc785c)" />
+
+            <path class="cat-whisker" d="M20 30h-9M20 34h-9" stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" opacity=".7" />
+            <path class="cat-whisker" d="M60 30h9M60 34h9" stroke="currentColor" stroke-width="1"
+                stroke-linecap="round" opacity=".7" />
+
+        </g>
+
+        <text class="cat-zzz cat-zzz-1" x="54" y="10">z</text>
+        <text class="cat-zzz cat-zzz-2" x="61" y="2">z</text>
+
+    </svg>
+
+</button>

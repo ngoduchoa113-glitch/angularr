@@ -1,52 +1,49 @@
-<div class="detail-toolbar">
+@if (isLoadingRecipes()) {
 
+<div class="detail-toolbar">
     <a mat-stroked-button routerLink="/recipes" class="back-link">
         <mat-icon>arrow_back</mat-icon>
         Quay lại danh sách
     </a>
+</div>
 
-    @if (localRecipe(); as recipe) {
-    <div class="detail-actions">
+<mat-card class="recipe-card">
+    <mat-card-content>
+        <div class="loading-state">
+            <mat-spinner diameter="32" aria-label="Đang tải công thức" />
+            <p>Đang tải...</p>
+        </div>
+    </mat-card-content>
+</mat-card>
 
-        <a mat-stroked-button class="edit-link" [routerLink]="['/recipes', recipe.id, 'edit']">
-            <mat-icon>edit</mat-icon>
-            Sửa
-        </a>
+} @else if (selectedRecipe(); as recipe) {
 
-        <button mat-stroked-button type="button" class="delete-btn" (click)="deleteRecipe()">
-            <mat-icon>delete</mat-icon>
-            Xoá
-        </button>
+<div class="detail-hero">
 
+    @if (recipe.imgUrl) {
+    <img class="detail-hero-image" [src]="recipe.imgUrl" [alt]="'Ảnh của ' + recipe.name">
+    } @else {
+    <div class="detail-hero-image detail-hero-placeholder">
+        <mat-icon>image</mat-icon>
     </div>
     }
+
+    <div class="detail-hero-scrim"></div>
+
+    <a mat-stroked-button routerLink="/recipes" class="detail-hero-back">
+        <mat-icon>arrow_back</mat-icon>
+        Quay lại danh sách
+    </a>
+
+    <div class="detail-hero-content">
+        <span class="detail-hero-category">{{ categoryLabel(recipe.category) }}</span>
+        <h1 class="detail-hero-title">{{ recipe.name }}</h1>
+        <p class="detail-hero-subtitle">{{ recipe.description }}</p>
+    </div>
 
 </div>
 
-@if (selectedRecipe(); as recipe) {
-
 <mat-card class="recipe-card">
-
-    @if (recipe.imgUrl) {
-    <img mat-card-image [src]="recipe.imgUrl" [alt]="'Ảnh của ' + recipe.name">
-    } @else {
-    <div class="recipe-image-placeholder">
-        <mat-icon>image</mat-icon>
-        <span>Chưa có ảnh</span>
-    </div>
-    }
-
-    <mat-card-header>
-
-        <mat-card-title>
-            {{ recipe.name }}
-        </mat-card-title>
-
-        <mat-card-subtitle>
-            {{ recipe.description }}
-        </mat-card-subtitle>
-
-    </mat-card-header>
 
     <mat-card-content>
 
@@ -203,11 +200,26 @@
 
                 </div>
 
+                @if (!authStore.isAdmin()) {
+                <button mat-flat-button type="button" class="place-order-btn" [disabled]="addingToCart()"
+                    (click)="addToCart()">
+                    <mat-icon>add_shopping_cart</mat-icon>
+                    Thêm vào giỏ hàng ({{ soPhanAn() }} phần)
+                </button>
+                }
+
     </mat-card-content>
 
 </mat-card>
 
 } @else {
+
+<div class="detail-toolbar">
+    <a mat-stroked-button routerLink="/recipes" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Quay lại danh sách
+    </a>
+</div>
 
 <mat-card class="recipe-card">
 

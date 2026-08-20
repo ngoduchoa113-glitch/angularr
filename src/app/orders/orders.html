@@ -1,0 +1,98 @@
+<div class="orders-layout">
+
+    <h1 class="page-title">Đơn của tôi</h1>
+
+    @if (store.isLoading()) {
+    <div class="loading-state">
+        <mat-spinner diameter="32" aria-label="Đang tải đơn" />
+        <p>Đang tải đơn...</p>
+    </div>
+    } @else if (store.orders().length === 0) {
+    <p class="empty-state">Bạn chưa đặt món nào.</p>
+    } @else {
+
+    <div class="orders-list">
+
+        @for (order of store.orders(); track order.id) {
+
+        <mat-card class="order-card">
+
+            <div class="order-image">
+                @if (order.recipeImgUrl) {
+                <img [src]="order.recipeImgUrl" [alt]="order.recipeName">
+                } @else {
+                <div class="order-image-placeholder">
+                    <mat-icon>image</mat-icon>
+                </div>
+                }
+            </div>
+
+            <div class="order-body">
+
+                <div class="order-header">
+                    <span class="order-name">{{ order.recipeName }}</span>
+                    <span class="status-badge" [class]="'status-' + order.status">
+                        {{ statusLabel(order.status) }}
+                    </span>
+                </div>
+
+                <p class="order-date">Đặt lúc {{ order.createdAt | date:'short' }}</p>
+
+                @if (editingOrderId() === order.id) {
+
+                <div class="edit-row">
+                    <button mat-icon-button type="button" (click)="decreaseEditServings()"
+                        [disabled]="editServings() === 1" aria-label="Giảm số phần">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <span class="servings-number">{{ editServings() }}</span>
+                    <button mat-icon-button type="button" (click)="increaseEditServings()" aria-label="Tăng số phần">
+                        <mat-icon>add</mat-icon>
+                    </button>
+
+                    <button mat-flat-button type="button" [disabled]="savingEdit()" (click)="saveEdit(order)">
+                        Lưu
+                    </button>
+                    <button mat-stroked-button type="button" [disabled]="savingEdit()" (click)="cancelEdit()">
+                        Huỷ
+                    </button>
+                </div>
+
+                } @else {
+
+                <div class="order-info-row">
+                    <span>{{ order.servings }} phần</span>
+                    <strong>{{ order.totalPrice | number }} đ</strong>
+                </div>
+
+                @if (order.status === 'cancelled' && order.cancelReason) {
+                <p class="cancel-reason">Lý do huỷ: {{ order.cancelReason }}</p>
+                }
+
+                @if (order.status === 'in_progress') {
+                <div class="order-actions">
+                    <button mat-stroked-button type="button" (click)="startEdit(order)">
+                        <mat-icon>edit</mat-icon>
+                        Sửa
+                    </button>
+                    <button mat-stroked-button type="button" class="cancel-btn"
+                        [disabled]="cancellingOrderId() === order.id" (click)="confirmCancelOrder(order)">
+                        <mat-icon>cancel</mat-icon>
+                        Huỷ đơn
+                    </button>
+                </div>
+                }
+
+                }
+
+            </div>
+
+        </mat-card>
+
+        }
+
+    </div>
+
+    }
+
+</div>

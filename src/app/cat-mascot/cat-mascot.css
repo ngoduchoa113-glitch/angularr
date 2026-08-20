@@ -1,0 +1,291 @@
+:host {
+    /* Đặt trong sidebar (app.html), góc dưới-trái, ngay cạnh chai potion trang trí
+       (::after của .app-drawer trong app.css) — neo theo .app-drawer (position:
+       absolute sẵn có của Material) thay vì toàn viewport như trước, để "nằm trong
+       phần menu" đúng yêu cầu thay vì nổi cố định đè lên nội dung trang. */
+    position: absolute;
+    /* Lệch phải khỏi chai potion (::after của .app-drawer, nằm sát góc trái) — để cả 2
+       cùng nhìn thấy được, mèo đứng cạnh chứ không đè lên chai. */
+    left: 52px;
+    bottom: 6px;
+    z-index: 2;
+    /* Trên mat-nav-list (z-index 1) và trên trang trí góc (z-index 0, xem app.css)
+       nhưng vẫn thấp hơn nhiều overlay CDK (dialog/menu/snackbar, mặc định 1000+). */
+}
+
+.cat-mascot-hit-area {
+    position: relative;
+    display: block;
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #171310;
+    /* "Mèo đen" — cố định màu, không đổi theo theme (app hiện chỉ có theme tối, và
+       bản sắc "mèo đen" nên giữ nguyên bất kể sau này theme có đổi hay không). */
+}
+
+.cat-mascot-hit-area:hover .cat-svg:not(.sleeping) {
+    transform: scale(1.06);
+}
+
+.cat-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, .45));
+    transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+.cat-svg.sleeping {
+    transform: scale(.92) translateY(3px);
+}
+
+/* ====================== Mắt ====================== */
+
+.cat-eyes-open {
+    opacity: 1;
+    transition: opacity .1s ease;
+}
+
+.cat-eyes-closed {
+    opacity: 0;
+    transition: opacity .1s ease;
+}
+
+.cat-svg.sleeping .cat-eyes-open,
+.cat-svg.blinking .cat-eyes-open {
+    opacity: 0;
+}
+
+.cat-svg.sleeping .cat-eyes-closed,
+.cat-svg.blinking .cat-eyes-closed {
+    opacity: 1;
+}
+
+.cat-pupil {
+    transition: transform .08s linear;
+}
+
+/* ====================== Đuôi — vẫy liên tục ====================== */
+
+.cat-tail {
+    transform-origin: 60px 58px;
+    animation: tailWag 1.6s ease-in-out infinite;
+}
+
+.cat-svg.sleeping .cat-tail {
+    animation-play-state: paused;
+}
+
+.cat-svg.running .cat-tail {
+    animation-duration: .4s;
+}
+
+@keyframes tailWag {
+
+    0%,
+    100% {
+        transform: rotate(-10deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+/* ====================== Ngủ — "z z z" ====================== */
+
+.cat-zzz {
+    font-size: 8px;
+    font-weight: 700;
+    fill: var(--mat-sys-outline);
+    opacity: 0;
+}
+
+.cat-svg.sleeping .cat-zzz-1 {
+    animation: zzzFloat 2.4s ease-in infinite;
+}
+
+.cat-svg.sleeping .cat-zzz-2 {
+    animation: zzzFloat 2.4s ease-in infinite .8s;
+}
+
+@keyframes zzzFloat {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0);
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(6px, -10px);
+    }
+}
+
+/* ====================== Bong bóng "Meow~" ====================== */
+
+.speech-bubble {
+    position: absolute;
+    top: -8px;
+    right: 8px;
+    transform: translateY(-100%);
+
+    padding: 6px 12px;
+    border-radius: 12px;
+    background: var(--mat-sys-surface-container-highest);
+    color: var(--mat-sys-on-surface);
+    border: 1px solid var(--mat-sys-outline-variant);
+
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    white-space: nowrap;
+
+    animation: bubblePop .25s cubic-bezier(.2, .8, .2, 1.4);
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 16px;
+    width: 10px;
+    height: 10px;
+    background: inherit;
+    border-right: 1px solid var(--mat-sys-outline-variant);
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    transform: rotate(45deg);
+}
+
+@keyframes bubblePop {
+    from {
+        opacity: 0;
+        transform: translateY(-100%) scale(.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(-100%) scale(1);
+    }
+}
+
+/* ====================== Vui khi được yêu thích ====================== */
+
+.cat-svg.happy {
+    animation: happyBounce 1.2s ease;
+}
+
+@keyframes happyBounce {
+
+    0%,
+    100% {
+        transform: none;
+    }
+
+    20% {
+        transform: translateY(-10px) scale(1.05);
+    }
+
+    40% {
+        transform: translateY(0) scale(.98);
+    }
+
+    60% {
+        transform: translateY(-5px) scale(1.02);
+    }
+
+    80% {
+        transform: translateY(0);
+    }
+}
+
+.happy-heart {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+
+    color: var(--gold-accent, #cc785c);
+    font-size: 20px;
+    line-height: 1;
+    pointer-events: none;
+
+    animation: heartFloat 1.2s ease forwards;
+}
+
+@keyframes heartFloat {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 0) scale(.4);
+    }
+
+    25% {
+        opacity: 1;
+        transform: translate(-50%, -14px) scale(1.1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -34px) scale(.9);
+    }
+}
+
+/* ====================== Chạy ngang khi đặt món ====================== */
+
+.cat-mascot-hit-area.running {
+    animation: dashAcross 1.8s cubic-bezier(.3, .1, .3, 1);
+}
+
+@keyframes dashAcross {
+    0% {
+        transform: translateX(0);
+    }
+
+    45% {
+        transform: translateX(-62vw);
+    }
+
+    50% {
+        transform: translateX(-62vw) scaleX(-1);
+    }
+
+    95% {
+        transform: translateX(0) scaleX(-1);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* ====================== Giảm chuyển động khi người dùng yêu cầu ====================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cat-tail,
+    .cat-svg.happy,
+    .cat-mascot-hit-area.running,
+    .cat-zzz {
+        animation: none !important;
+    }
+}
+
+/* ====================== Mobile — thu nhỏ, tránh che nội dung ====================== */
+
+@media (max-width: 600px) {
+    :host {
+        right: 12px;
+        bottom: 12px;
+    }
+
+    .cat-mascot-hit-area {
+        width: 48px;
+        height: 48px;
+    }
+}

@@ -1,0 +1,294 @@
+<a mat-stroked-button routerLink="/admin/recipes" class="back-link">
+    <mat-icon>arrow_back</mat-icon>
+    Quay lại danh sách quản trị
+</a>
+
+@if (isLoadingRecipe()) {
+
+<div class="loading-state">
+    <mat-spinner diameter="32" aria-label="Đang tải công thức" />
+    <p>Đang tải...</p>
+</div>
+
+} @else if (recipeNotFound()) {
+
+<mat-card class="form-card">
+    <mat-card-content>
+        <h2>Không tìm thấy công thức.</h2>
+        <p>Công thức bạn đang sửa không tồn tại hoặc đã bị xoá.</p>
+    </mat-card-content>
+</mat-card>
+
+} @else {
+
+<div class="add-recipe-layout">
+
+<mat-card class="form-card">
+
+    <mat-card-header>
+
+        <span class="eyebrow"></span>
+
+        <mat-card-title>
+            {{ isEditMode ? 'Sửa công thức' : 'Thêm công thức mới' }}
+        </mat-card-title>
+
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <form novalidate (submit)="save($event)" class="recipe-form">
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Tên món</mat-label>
+
+                <input matInput type="text" [formField]="recipeForm.name">
+                @for (error of recipeForm.name().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Mô tả</mat-label>
+
+                <input matInput type="text" [formField]="recipeForm.description">
+                @for (error of recipeForm.description().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Email tác giả</mat-label>
+
+                <input matInput type="email" [formField]="recipeForm.authorEmail">
+
+
+                @for (error of recipeForm.authorEmail().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Tag</mat-label>
+
+                <mat-select [formField]="recipeForm.category">
+                    @for (option of categoryOptions; track option.value) {
+                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                </mat-select>
+
+                @for (error of recipeForm.category().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Giá</mat-label>
+
+                <input matInput type="number" step="1000" [formField]="recipeForm.price"
+                    (keydown)="blockInvalidNumberKey($event)">
+                <span matSuffix class="price-suffix">VNĐ</span>
+
+                @for (error of recipeForm.price().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Hình ảnh (URL)</mat-label>
+
+                <input matInput type="text" [formField]="recipeForm.imgUrl">
+                @for (error of recipeForm.imgUrl().errors(); track error) {
+                <mat-error>{{ error.message }}</mat-error>
+                }
+
+            </mat-form-field>
+
+            <div class="image-actions">
+
+                <button mat-stroked-button type="button" class="check-url-btn" [disabled]="checkingUrl()" (click)="checkImageUrl()">
+                    @if (checkingUrl()) {
+                    <mat-spinner diameter="16" />
+                    Đang kiểm tra...
+                    } @else {
+                    <mat-icon>verified</mat-icon>
+                    Kiểm tra & dùng URL này
+                    }
+                </button>
+
+                <input #fileInput type="file" accept="image/*" hidden [disabled]="uploadingImage()" (change)="onFileSelected($event)">
+                <button mat-stroked-button type="button" class="upload-image-btn" [disabled]="uploadingImage()" (click)="fileInput.click()">
+                    @if (uploadingImage()) {
+                    <mat-spinner diameter="16" />
+                    Đang tải ảnh...
+                    } @else {
+                    <mat-icon>upload</mat-icon>
+                    Tải ảnh từ máy
+                    }
+                </button>
+
+            </div>
+
+            <p class="image-hint">Ảnh (dù tải từ máy hay dán URL) đều phải qua kiểm duyệt tự động trước khi dùng được.</p>
+
+            <div class="ingredients-section">
+
+                <mat-label class="ingredients-label">Nguyên liệu</mat-label>
+
+                @for (ingredient of recipeForm.ingredients; track $index; let i = $index) {
+
+                <div class="ingredient-row">
+
+                    <mat-form-field appearance="outline" class="ingredient-name" subscriptSizing="dynamic">
+
+                        <mat-label>Tên nguyên liệu</mat-label>
+
+                        <input matInput type="text" [formField]="ingredient.name">
+                        @for (error of ingredient.name().errors(); track error) {
+                        <mat-error>{{ error.message }}</mat-error>
+                        }
+
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="ingredient-quantity" subscriptSizing="dynamic">
+
+                        <mat-label>Số lượng</mat-label>
+
+                        <input matInput type="number" [formField]="ingredient.quantity"
+                            (keydown)="blockInvalidNumberKey($event)">
+                        @for (error of ingredient.quantity().errors(); track error) {
+                        <mat-error>{{ error.message }}</mat-error>
+                        }
+
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="ingredient-unit" subscriptSizing="dynamic">
+
+                        <mat-label>Đơn vị</mat-label>
+
+                        <input matInput type="text" [formField]="ingredient.unit">
+                        @for (error of ingredient.unit().errors(); track error) {
+                        <mat-error>{{ error.message }}</mat-error>
+                        }
+
+                    </mat-form-field>
+
+                    <button mat-icon-button type="button" class="remove-ingredient"
+                        [disabled]="recipeForm.ingredients().value().length === 1"
+                        (click)="removeIngredient(i)" aria-label="Xoá nguyên liệu">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+
+                </div>
+
+                }
+
+                @for (error of recipeForm.ingredients().errors(); track error) {
+                <p class="ingredients-error">{{ error.message }}</p>
+                }
+
+                <button mat-stroked-button type="button" class="add-ingredient" (click)="addIngredient()">
+                    <mat-icon>add</mat-icon>
+                    Thêm nguyên liệu
+                </button>
+
+            </div>
+
+            <button matButton="filled" type="submit" [disabled]="recipeForm().submitting()">
+
+                <mat-icon>save</mat-icon>
+
+                {{ isEditMode ? 'Cập nhật' : 'Lưu công thức' }}
+
+            </button>
+
+
+        </form>
+
+    </mat-card-content>
+
+</mat-card>
+
+<mat-card class="preview-card">
+
+    <span class="eyebrow preview-eyebrow">Xem trước</span>
+
+    @if (previewRecipe().imgUrl) {
+    <img mat-card-image [src]="previewRecipe().imgUrl" [alt]="previewRecipe().name || 'Ảnh món ăn'">
+    } @else {
+    <div class="preview-image-placeholder">
+        <mat-icon>image</mat-icon>
+        <span>Chưa có ảnh</span>
+    </div>
+    }
+
+    <mat-card-header>
+
+        <mat-card-title>
+            {{ previewRecipe().name || 'Tên món ăn' }}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+            {{ previewRecipe().description || 'Mô tả món ăn sẽ hiện ở đây' }}
+        </mat-card-subtitle>
+
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <div class="preview-price">
+
+            <p>
+                Giá:
+                <strong>{{ previewRecipe().price ?? 0 | number }} VNĐ</strong>
+            </p>
+
+        </div>
+
+        @if (previewRecipe().price !== null) {
+
+        @if (previewRecipe().price! < 100000) {
+        <p class="price-tag budget">Bình dân</p>
+        } @else if (previewRecipe().price! <= 150000) {
+        <p class="price-tag standard">Tiêu chuẩn</p>
+        } @else {
+        <p class="price-tag premium">Cao cấp</p>
+        }
+
+        }
+
+        <mat-divider></mat-divider>
+
+        <h3>Nguyên liệu</h3>
+
+        <mat-list>
+
+            @for (ingredient of previewRecipe().ingredients; track $index) {
+            <mat-list-item>
+                <span matListItemTitle>{{ ingredient.name }}</span>
+                <span matListItemMeta>{{ ingredient.quantity }} {{ ingredient.unit }}</span>
+            </mat-list-item>
+            } @empty {
+            <mat-list-item>Chưa có nguyên liệu nào.</mat-list-item>
+            }
+
+        </mat-list>
+
+    </mat-card-content>
+
+</mat-card>
+
+</div>
+
+}

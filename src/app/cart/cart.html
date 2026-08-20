@@ -1,0 +1,137 @@
+<div class="cart-layout">
+
+    <a mat-stroked-button routerLink="/recipes" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Tiếp tục chọn món
+    </a>
+
+    <h1 class="cart-title">Giỏ hàng</h1>
+
+    @if (store.isLoading()) {
+
+    <div class="loading-state">
+        <mat-spinner diameter="32" aria-label="Đang tải giỏ hàng" />
+        <p>Đang tải giỏ hàng...</p>
+    </div>
+
+    } @else if (store.items().length === 0) {
+
+    <div class="empty-state">
+        <mat-icon>shopping_cart</mat-icon>
+        <p>Giỏ hàng đang trống.</p>
+        <a mat-flat-button routerLink="/recipes">
+            <mat-icon>restaurant_menu</mat-icon>
+            Chọn món ngay
+        </a>
+    </div>
+
+    } @else {
+
+    <div class="cart-content">
+
+        <div class="cart-list">
+
+            <mat-checkbox class="select-all-row" [checked]="allSelected()"
+                (change)="toggleSelectAll($event.checked)">
+                Chọn tất cả ({{ store.items().length }} món)
+            </mat-checkbox>
+
+            @for (item of store.items(); track item.id) {
+
+            <mat-card class="cart-item">
+
+                <mat-checkbox [checked]="selected()[item.id]" (change)="toggleSelected(item.id)" />
+
+                @if (item.recipeImgUrl) {
+                <img class="cart-item-image" [src]="item.recipeImgUrl" [alt]="item.recipeName">
+                } @else {
+                <div class="cart-item-image cart-item-image-placeholder">
+                    <mat-icon>image</mat-icon>
+                </div>
+                }
+
+                <div class="cart-item-info">
+                    <span class="cart-item-name">{{ item.recipeName }}</span>
+                    <span class="cart-item-category">{{ categoryLabel(item.category) }}</span>
+                    <span class="cart-item-price">{{ item.unitPrice | number }} đ / phần</span>
+                </div>
+
+                <div class="cart-item-servings">
+                    <button mat-icon-button type="button" (click)="changeServings(item, -1)"
+                        [disabled]="item.servings === 1" aria-label="Giảm số phần">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                    <span class="servings-number">{{ item.servings }}</span>
+                    <button mat-icon-button type="button" (click)="changeServings(item, 1)"
+                        aria-label="Tăng số phần">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+
+                <span class="cart-item-subtotal">{{ item.subtotal | number }} đ</span>
+
+                <button mat-icon-button type="button" class="cart-item-remove" (click)="removeItem(item)"
+                    aria-label="Xoá khỏi giỏ">
+                    <mat-icon>delete</mat-icon>
+                </button>
+
+            </mat-card>
+
+            }
+
+        </div>
+
+        <mat-card class="cart-summary">
+
+            <h2>Tóm tắt đơn</h2>
+
+            @for (t of itemTotals(); track t.item.id) {
+            <div class="summary-row">
+                <span>
+                    {{ t.item.recipeName }} ({{ t.item.servings }} phần)
+                    @if (t.rewardApplied) {
+                    <span class="reward-tag">-{{ activeReward()?.discountPercent }}%</span>
+                    }
+                </span>
+                <strong>{{ t.total | number }} đ</strong>
+            </div>
+            }
+
+            @if (itemTotals().length === 0) {
+            <p class="no-selection-hint">Chưa chọn món nào để mua.</p>
+            }
+
+            @if (activeReward(); as reward) {
+            <div class="reward-banner">
+                <mat-checkbox [checked]="applyReward()" (change)="applyReward.set($event.checked)">
+                    🐀 Áp dụng ưu đãi giảm {{ reward.discountPercent }}% — tự động áp cho món giá trị cao
+                    nhất trong các món đã chọn
+                </mat-checkbox>
+            </div>
+            }
+
+            <mat-divider></mat-divider>
+
+            <div class="summary-row total-row">
+                <span>Tổng cộng</span>
+                <strong>{{ grandTotal() | number }} đ</strong>
+            </div>
+
+            <button mat-flat-button type="button" class="checkout-btn" [disabled]="checkingOut()"
+                (click)="checkout()">
+                @if (checkingOut()) {
+                <mat-spinner diameter="16" />
+                Đang xử lý...
+                } @else {
+                <mat-icon>shopping_cart_checkout</mat-icon>
+                Xác nhận mua ({{ selectedItems().length }})
+                }
+            </button>
+
+        </mat-card>
+
+    </div>
+
+    }
+
+</div>

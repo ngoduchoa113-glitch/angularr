@@ -1,0 +1,142 @@
+<div class="dashboard-layout">
+
+    <h1 class="page-title">Dashboard</h1>
+
+    @if (statsResource.isLoading()) {
+    <div class="loading-state">
+        <mat-spinner diameter="32" aria-label="Đang tải thống kê" />
+        <p>Đang tải thống kê...</p>
+    </div>
+    } @else if (statsResource.value(); as stats) {
+
+    <!-- 4 thẻ tổng quan -->
+    <div class="stat-tiles">
+        <mat-card class="stat-tile">
+            <span class="stat-label">Tổng đơn</span>
+            <span class="stat-value">{{ stats.totalOrders | number }}</span>
+        </mat-card>
+        <mat-card class="stat-tile">
+            <span class="stat-label">Doanh thu</span>
+            <span class="stat-value">{{ stats.totalRevenue | number }} đ</span>
+        </mat-card>
+        <mat-card class="stat-tile">
+            <span class="stat-label">Đang làm</span>
+            <span class="stat-value">{{ stats.inProgressCount | number }}</span>
+        </mat-card>
+        <mat-card class="stat-tile">
+            <span class="stat-label">Bị huỷ</span>
+            <span class="stat-value">{{ stats.cancelledCount | number }}</span>
+        </mat-card>
+    </div>
+
+    <div class="chart-grid">
+
+        <!-- Donut: đơn theo trạng thái -->
+        <mat-card class="chart-card">
+            <h2 class="chart-card-title">Đơn theo trạng thái</h2>
+
+            @if (stats.totalOrders === 0) {
+            <p class="empty-chart">Chưa có đơn nào.</p>
+            } @else {
+            <div class="donut-wrap">
+
+                <svg width="140" height="140" viewBox="0 0 140 140" role="img"
+                    [attr.aria-label]="'Đơn theo trạng thái, tổng ' + stats.totalOrders + ' đơn'">
+                    <g transform="translate(70,70) rotate(-90)">
+                        @for (segment of donutSegments(); track segment.status) {
+                        <circle r="60" fill="none" [style.stroke]="'var(' + segment.colorVar + ')'"
+                            stroke-width="18" [attr.stroke-dasharray]="segment.dashArray"
+                            [attr.stroke-dashoffset]="segment.dashOffset" />
+                        }
+                    </g>
+                    <text x="70" y="66" text-anchor="middle" class="donut-center-label">{{ stats.totalOrders }}</text>
+                    <text x="70" y="82" text-anchor="middle" class="donut-center-sublabel">đơn</text>
+                </svg>
+
+                <div class="donut-legend">
+                    @for (segment of donutSegments(); track segment.status) {
+                    <div class="legend-row">
+                        <span class="legend-swatch" [style.background]="'var(' + segment.colorVar + ')'"></span>
+                        <span>{{ segment.label }}</span>
+                        <span class="legend-count">{{ segment.count }} ({{ segment.percent }}%)</span>
+                    </div>
+                    }
+                </div>
+
+            </div>
+            }
+        </mat-card>
+
+        <!-- Line: doanh thu 14 ngày -->
+        <mat-card class="chart-card">
+            <h2 class="chart-card-title">Doanh thu 14 ngày gần nhất</h2>
+
+            @if (linePoints().length === 0) {
+            <p class="empty-chart">Chưa có dữ liệu.</p>
+            } @else {
+            <div class="line-chart-wrap">
+                <svg [attr.width]="lineWidth" [attr.height]="lineHeight" [attr.viewBox]="'0 0 ' + lineWidth + ' ' + lineHeight"
+                    role="img" aria-label="Biểu đồ doanh thu theo ngày"
+                    (mousemove)="onLineHover($event, $any(lineSvg))" (mouseleave)="onLineLeave()" #lineSvg>
+
+                    <line class="line-gridline" x1="0" [attr.y1]="lineHeight - 8" [attr.x2]="lineWidth" [attr.y2]="lineHeight - 8" />
+
+                    <path class="line-path" [attr.d]="linePath()" />
+
+                    @for (point of linePoints(); track point.date; let i = $index) {
+                    @if (i === linePoints().length - 1 || hoveredPointIndex() === i) {
+                    <circle class="line-marker" [attr.cx]="point.x" [attr.cy]="point.y" r="4" />
+                    }
+                    }
+
+                    @if (hoveredPointIndex(); as hi) {
+                    <line class="line-crosshair" [attr.x1]="linePoints()[hi].x" y1="0" [attr.x2]="linePoints()[hi].x"
+                        [attr.y2]="lineHeight - 8" />
+                    }
+
+                    @if (linePoints().length > 0) {
+                    <text class="line-end-label" [attr.x]="linePoints()[linePoints().length - 1].x - 4"
+                        [attr.y]="linePoints()[linePoints().length - 1].y - 10" text-anchor="end">
+                        {{ linePoints()[linePoints().length - 1].revenue | number }} đ
+                    </text>
+                    }
+
+                </svg>
+
+                @if (hoveredPointIndex() !== null) {
+                <div class="line-tooltip" [style.left.px]="linePoints()[hoveredPointIndex()!].x"
+                    [style.top.px]="linePoints()[hoveredPointIndex()!].y">
+                    {{ linePoints()[hoveredPointIndex()!].date | date:'d/M' }} —
+                    {{ linePoints()[hoveredPointIndex()!].revenue | number }} đ
+                </div>
+                }
+            </div>
+            }
+        </mat-card>
+
+    </div>
+
+    <!-- Bar: top 5 món được đặt nhiều nhất -->
+    <mat-card class="chart-card">
+        <h2 class="chart-card-title">Top 5 món được đặt nhiều nhất</h2>
+
+        @if (stats.topRecipes.length === 0) {
+        <p class="empty-chart">Chưa có đơn nào.</p>
+        } @else {
+        <div class="bar-list">
+            @for (recipe of stats.topRecipes; track recipe.recipeName) {
+            <div class="bar-row">
+                <span class="bar-row-label" [title]="recipe.recipeName">{{ recipe.recipeName }}</span>
+                <div class="bar-track">
+                    <div class="bar-fill" [style.width.%]="(recipe.orderCount / maxTopRecipeCount()) * 100"></div>
+                </div>
+                <span class="bar-row-value">{{ recipe.orderCount }}</span>
+            </div>
+            }
+        </div>
+        }
+    </mat-card>
+
+    }
+
+</div>

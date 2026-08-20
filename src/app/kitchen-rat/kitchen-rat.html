@@ -1,0 +1,6 @@
+@if (visible()) {
+<button type="button" class="kitchen-rat" [style.left.%]="posX()" [style.top.%]="posY()" [disabled]="catching()"
+    (click)="onCatch()" aria-label="Bắt chuột nhận thưởng">
+    🐀
+</button>
+}

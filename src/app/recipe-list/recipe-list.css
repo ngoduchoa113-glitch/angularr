@@ -7,6 +7,143 @@
     margin: auto;
 }
 
+/* ====================== Hero ====================== */
+
+.hero {
+    position: relative;
+    height: 300px;
+    margin-bottom: 32px;
+    border-radius: var(--mat-sys-corner-large);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+
+    /* Nền dự phòng — hiện ngay dưới ảnh trong lúc ảnh tải, và vẫn còn đẹp nếu ảnh
+       404 (chưa gắn/xoá file), thay vì để lộ 1 khung ảnh vỡ trơ trọi. */
+    background: linear-gradient(160deg, var(--mat-sys-surface-container-high), #17110c);
+}
+
+.hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Vị trí % đo trực tiếp bằng lưới toạ độ đè lên ảnh gốc (không áng chừng) — cả 2 điểm
+   đều canh gần trục dọc 50% của ảnh, vì object-fit:cover crop phần trên/dưới nhiều nhất
+   ở màn hình rộng (hero 1200x300 chỉ còn thấy dải ~27%-73% theo chiều dọc của ảnh gốc);
+   điểm càng gần 50% thì càng ít lệch khi bề rộng container đổi theo viewport. */
+.hero-candle-glow {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 200, 120, .55) 0%, rgba(255, 160, 60, .2) 45%, transparent 72%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    animation: heroCandleFlicker 3.4s ease-in-out infinite;
+}
+
+/* Nồi trên bếp lửa, bên phải ảnh — nguồn sáng rõ nhất trong tranh. */
+.hero-candle-glow-stove {
+    left: 75%;
+    top: 49%;
+    width: 190px;
+    height: 190px;
+}
+
+/* Cụm nến nhỏ cạnh quả bí ngô trên quầy bếp bên trái. */
+.hero-candle-glow-table {
+    left: 14%;
+    top: 35%;
+    animation-delay: 1.3s;
+}
+
+@keyframes heroCandleFlicker {
+
+    0%,
+    100% {
+        opacity: .8;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    30% {
+        opacity: .6;
+    }
+
+    55% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.06);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-candle-glow {
+        animation: none;
+        opacity: .85;
+    }
+}
+
+.hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 7, 5, .88) 0%, rgba(10, 7, 5, .4) 55%, rgba(10, 7, 5, .05) 100%);
+}
+
+.hero-content {
+    position: relative;
+    padding: 32px 40px;
+    max-width: 640px;
+}
+
+.hero-eyebrow {
+    display: block;
+    color: var(--mat-sys-primary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.hero-title {
+    margin: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 42px;
+    line-height: 1.1;
+    color: #f3ecd8;
+}
+
+.hero-subtitle {
+    margin: 12px 0 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(243, 236, 216, .85);
+}
+
+@media (max-width: 600px) {
+
+    .hero {
+        height: 220px;
+    }
+
+    .hero-content {
+        padding: 20px 24px;
+    }
+
+    .hero-title {
+        font-size: 30px;
+    }
+
+    .hero-subtitle {
+        font-size: 13px;
+    }
+}
+
 /* ====================== */
 
 .search-group mat-form-field {
@@ -16,7 +153,7 @@
 
 /* ====================== */
 
-.sort-buttons {
+.toolbar-buttons {
 
     display: flex;
 
@@ -26,10 +163,10 @@
 
     gap: 16px;
 
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 }
 
-.sort-buttons button {
+.toolbar-buttons>button {
 
     font-weight: 700;
 
@@ -44,21 +181,16 @@
     border-color: var(--mat-sys-outline);
 }
 
-.sort-buttons button:hover {
+.toolbar-buttons>button:hover {
 
     background: var(--mat-sys-surface-container-highest);
 
     border-color: var(--mat-sys-primary);
 }
 
-.sort-buttons button.active {
-
-    background: var(--mat-sys-primary);
-
-    border-color: var(--mat-sys-primary);
-
-    color: var(--mat-sys-on-primary);
-}
+/* Nút trigger dropdown (Filter/Tag) không có state "active" riêng — trạng thái
+   hiện tại đã hiện ngay trên nhãn nút (vd "Tag: Tráng miệng"), khác với nút
+   Yêu thích vốn chỉ là on/off nên vẫn cần đổi màu khi bật. */
 
 .favorites-toggle {
 
@@ -80,9 +212,29 @@
 
 /* ====================== */
 
+.mat-mdc-menu-item.active {
+
+    color: var(--mat-sys-primary);
+
+    font-weight: 600;
+}
+
+.mat-mdc-menu-item.active mat-icon {
+
+    color: var(--mat-sys-primary);
+}
+
+/* ====================== */
+
 .result-count {
 
-    text-align: center;
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
 
     font-weight: 600;
 
@@ -91,15 +243,43 @@
     color: var(--mat-sys-on-surface-variant);
 }
 
-/* ====================== */
+.search-spinner {
 
-.section-divider {
-
-    margin: 32px 0;
+    display: inline-block;
 }
+
+/* ====================== */
 
 .empty-state {
 
+    grid-column: 1 / -1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    padding: 48px 0;
+
+    color: var(--mat-sys-on-surface-variant);
+    text-align: center;
+}
+
+.empty-state-illustration {
+
+    width: 72px;
+    height: 72px;
+
+    color: var(--mat-sys-outline);
+}
+
+.loading-state {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 64px 0;
     color: var(--mat-sys-on-surface-variant);
 }
 
@@ -132,7 +312,7 @@
 
     text-decoration: none;
 
-    transition: transform .22s cubic-bezier(.2, .8, .2, 1), box-shadow .22s ease;
+    transition: transform .22s cubic-bezier(.2, .8, .2, 1), box-shadow .22s ease, border-color .22s ease;
 }
 
 .recipe-card:hover,
@@ -140,7 +320,14 @@
 
     transform: scale(1.015);
 
-    box-shadow: 0 10px 24px rgba(0, 0, 0, .45);
+    /* Như được ánh nến chiếu vào — quầng sáng ấm màu hổ phách thay cho bóng đổ đỏ
+       (rgba(212,14,14,...)) còn sót lại từ theme cũ trước khi đổi sang coral/vàng nến. */
+    border-color: rgba(232, 165, 90, .45);
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, .5),
+        0 0 32px rgba(232, 165, 90, .28),
+        0 0 0 1px rgba(232, 165, 90, .2) inset;
 }
 
 .recipe-card-image {
@@ -192,6 +379,25 @@
 
     font: var(--mat-sys-body-medium);
 
+    color: var(--mat-sys-on-surface-variant);
+}
+
+.recipe-card-category {
+
+    align-self: flex-start;
+
+    margin-top: 4px;
+
+    padding: 4px 12px;
+
+    border-radius: 9999px;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    background: var(--mat-sys-surface-container-high);
     color: var(--mat-sys-on-surface-variant);
 }
 

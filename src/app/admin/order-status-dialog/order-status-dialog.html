@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Đổi trạng thái đơn</h2>
+
+<mat-dialog-content>
+
+    <p class="dialog-subtitle">{{ data.recipeName }}</p>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="status-field">
+        <mat-label>Trạng thái</mat-label>
+        <mat-select [value]="status()" (selectionChange)="setStatus($event.value)">
+            @for (option of statusOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
+
+    @if (status() === 'cancelled') {
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="reason-field">
+        <mat-label>Lý do huỷ</mat-label>
+        <textarea matInput rows="3" [value]="cancelReason()"
+            (input)="cancelReason.set($any($event.target).value)"></textarea>
+        @if (reasonMissing()) {
+        <mat-error>Bắt buộc nhập lý do khi huỷ đơn</mat-error>
+        }
+    </mat-form-field>
+    }
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Huỷ</button>
+    <button mat-flat-button type="button" [disabled]="reasonMissing()" (click)="confirm()">Lưu</button>
+</mat-dialog-actions>

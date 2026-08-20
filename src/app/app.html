@@ -1,55 +1,123 @@
 <mat-toolbar class="app-toolbar">
 
+    @if (showSidenav()) {
     <button mat-icon-button type="button" aria-label="Mở/đóng menu" (click)="sidenavOpened.set(!sidenavOpened())">
         <mat-icon>menu</mat-icon>
     </button>
+    }
 
     <a routerLink="/recipes" class="app-logo-link" aria-label="Về trang danh sách món ăn">
-        <img src="https://th.bing.com/th?q=Meo+%c4%90en+Cartoon&w=120&h=120&c=1&rs=1&qlt=70&r=0&o=7&cb=1&dpr=1.9&pid=InlineBlock&rm=3&mkt=en-WW&cc=VN&setlang=en&adlt=moderate&t=1&mw=247"
-            alt="Logo" class="app-logo">
+        <img src="/images/cat-logo.webp" alt="Logo" class="app-logo">
     </a>
 
     <span class="app-title">Midnight Cat Restaurant</span>
 
     <span class="app-toolbar-spacer"></span>
 
-    <button mat-icon-button type="button" class="theme-toggle"
-        [attr.aria-label]="themeStore.mode() === 'dark' ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối'"
-        (click)="themeStore.toggle()">
-        <mat-icon>{{ themeStore.mode() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    @if (authStore.isAuthenticated()) {
+    <a routerLink="/profile" class="app-user-info" aria-label="Hồ sơ của tôi">
+        {{ authStore.user()?.name || authStore.user()?.email }}
+        @if (authStore.isAdmin()) {
+        <span class="app-role-badge">Admin</span>
+        }
+    </a>
+    <button mat-stroked-button type="button" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Đăng xuất
     </button>
+    } @else {
+    <a mat-stroked-button routerLink="/auth">
+        <mat-icon>login</mat-icon>
+        Đăng nhập
+    </a>
+    <a mat-stroked-button routerLink="/auth" [queryParams]="{ mode: 'signup' }">
+        Đăng ký
+    </a>
+    }
+
 
 </mat-toolbar>
 
 <mat-sidenav-container class="app-body">
 
+    @if (showSidenav()) {
     <mat-sidenav class="app-drawer" [mode]="sidenavMode()" [opened]="sidenavOpened()"
         (openedChange)="sidenavOpened.set($event)">
 
         <mat-nav-list>
 
-            <a mat-list-item routerLink="/recipes" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+            <a mat-list-item routerLink="/recipes" routerLinkActive="active-link"
+                [routerLinkActiveOptions]="{ exact: true }">
                 <mat-icon matListItemIcon>restaurant_menu</mat-icon>
                 <span matListItemTitle>Tất cả món</span>
             </a>
 
-            <a mat-list-item routerLink="/recipes/new" routerLinkActive="active-link">
-                <mat-icon matListItemIcon>add</mat-icon>
-                <span matListItemTitle>Thêm món</span>
+            @if (!authStore.isAdmin()) {
+            <a mat-list-item routerLink="/cart" routerLinkActive="active-link">
+                <mat-icon matListItemIcon [matBadge]="cartStore.itemCount()" [matBadgeHidden]="cartStore.itemCount() === 0"
+                    matBadgeSize="small" matBadgeColor="primary">shopping_cart</mat-icon>
+                <span matListItemTitle>Giỏ hàng</span>
             </a>
+            }
+
+            <a mat-list-item routerLink="/orders" routerLinkActive="active-link">
+                <mat-icon matListItemIcon>receipt_long</mat-icon>
+                <span matListItemTitle>Đơn của tôi</span>
+            </a>
+
+            <a mat-list-item routerLink="/profile" routerLinkActive="active-link">
+                <mat-icon matListItemIcon>account_circle</mat-icon>
+                <span matListItemTitle>Hồ sơ</span>
+            </a>
+
+            @if (authStore.isAdmin()) {
+
+            <mat-divider></mat-divider>
+            <h3 matSubheader class="admin-nav-heading">Quản trị</h3>
+
+            <a mat-list-item routerLink="/admin/orders" routerLinkActive="active-link">
+                <mat-icon matListItemIcon>fact_check</mat-icon>
+                <span matListItemTitle>Quản trị đơn</span>
+            </a>
+
+            <a mat-list-item routerLink="/admin/dashboard" routerLinkActive="active-link">
+                <mat-icon matListItemIcon>bar_chart</mat-icon>
+                <span matListItemTitle>Dashboard</span>
+            </a>
+
+            <a mat-list-item routerLink="/admin/members" routerLinkActive="active-link">
+                <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
+                <span matListItemTitle>Quản trị viên</span>
+            </a>
+
+            <a mat-list-item routerLink="/admin/recipes" routerLinkActive="active-link">
+                <mat-icon matListItemIcon>restaurant</mat-icon>
+                <span matListItemTitle>Quản trị Recipe</span>
+            </a>
+            }
 
         </mat-nav-list>
 
+        <!-- Đặt trong sidebar (thay vì nổi cố định toàn màn hình như trước) để dễ thấy
+             hơn, đúng góc dưới-trái nơi đã có sẵn trang trí chai potion. -->
+        <app-cat-mascot />
+
     </mat-sidenav>
+    }
 
     <mat-sidenav-content class="app-content">
 
         <router-outlet />
 
-        <a mat-fab class="app-fab" routerLink="/recipes/new" aria-label="Thêm món">
-            <mat-icon>add</mat-icon>
-        </a>
-
     </mat-sidenav-content>
 
 </mat-sidenav-container>
+
+@if (showSidenav()) {
+<app-candle-light />
+@if (!authStore.isAdmin()) {
+<!-- Admin không tự đặt món được (US-07) nên ưu đãi giảm giá vô nghĩa với họ — không
+     mời chơi easter egg mà họ không thể dùng phần thưởng. -->
+<app-kitchen-rat />
+}
+}

@@ -1,0 +1,66 @@
+<div class="admin-recipes-layout">
+
+    <div class="page-header">
+        <h1 class="page-title">Quản trị Recipe</h1>
+        <a mat-flat-button routerLink="/admin/recipes/new">
+            <mat-icon>add</mat-icon>
+            Thêm món
+        </a>
+    </div>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+        <mat-label>Tìm món theo tên</mat-label>
+        <input matInput type="search" [ngModel]="keyword()" (ngModelChange)="keyword.set($event)">
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    @if (recipesResource.isLoading()) {
+    <div class="loading-state">
+        <mat-spinner diameter="32" aria-label="Đang tải" />
+        <p>Đang tải danh sách...</p>
+    </div>
+    } @else if (recipesResource.value().length === 0) {
+    <p class="empty-state">Không tìm thấy món nào.</p>
+    } @else {
+
+    <div class="recipes-table-scroll">
+    <div class="recipes-table">
+
+        <div class="table-header">
+            <span></span>
+            <span>Tên món</span>
+            <span>Giá</span>
+            <span>Tác giả</span>
+            <span></span>
+        </div>
+
+        @for (recipe of recipesResource.value(); track recipe.id) {
+        <div class="table-row">
+            <span class="cell-image">
+                @if (recipe.imgUrl) {
+                <img [src]="recipe.imgUrl" [alt]="recipe.name">
+                } @else {
+                <div class="image-placeholder"><mat-icon>image</mat-icon></div>
+                }
+            </span>
+            <span class="cell-name">{{ recipe.name }}</span>
+            <span>{{ recipe.price | number }} đ</span>
+            <span class="cell-author">{{ recipe.authorEmail }}</span>
+            <span class="cell-actions">
+                <a mat-icon-button [routerLink]="['/admin/recipes', recipe.id, 'edit']" aria-label="Sửa">
+                    <mat-icon>edit</mat-icon>
+                </a>
+                <button mat-icon-button type="button" class="delete-btn" [disabled]="deletingId() === recipe.id"
+                    (click)="confirmDelete(recipe)" aria-label="Xoá">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </span>
+        </div>
+        }
+
+    </div>
+    </div>
+
+    }
+
+</div>
